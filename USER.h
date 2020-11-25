@@ -6,12 +6,12 @@ using namespace std;
 class USER
 {
 	private:
-		string userName;
+		string username;
 		string password;
 
 	public:
-		void setUserName(string name);
+		void setUsername(string name);
 		void setPassword(string word);
-		string getUserName();
+		string getUsername();
 		string getPassword();
 };
