@@ -1,5 +1,7 @@
 #include "USER.h"
 
+# --Robert Safford Test--
+
 string USER::getUsername() { return username; }
 
 string USER::getPassword() { return password; }
