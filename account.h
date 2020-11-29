@@ -84,7 +84,7 @@ class Account
             intrestRate = x;
         }
 
-        void setinterestRate( double x)
+        void setmonthlyFee( double x)
         {
             monthlyFee = x;
         }
@@ -153,7 +153,7 @@ class Account
         }
 
         
-}
+};
 
 class DailyCheckingAccount : public Account
 {
@@ -164,4 +164,18 @@ class DailyCheckingAccount : public Account
             setmonthlyFee(0.0);
             setinterestRate(0.0);
         }
-}
+};
+
+class DailySavingAccount : public Account
+{
+
+    public:
+        DailySavingAccount()
+        {
+            setmonthlyFee(0.0);
+            string input;
+            cout<<"Enter Interest Rate: "<<endl;
+            getline(cin,input);
+            setinterestRate(stod(input));
+        }
+};
