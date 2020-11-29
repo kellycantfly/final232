@@ -34,6 +34,9 @@ class Account
             cout<<"Enter Address: "<<endl;
             getline(cin,input);
             address = input;
+            time_t currentTime = time(NULL);
+            tm* timePtr = localtime(&currentTime);
+            dateOpened = to_string((timePtr->tm_mday))+"/"+ to_string((timePtr->tm_mon)+1) +"/"+ to_string((timePtr->tm_year)+1900);
             
         }
         //======================================================================================
@@ -102,52 +105,52 @@ class Account
             return firstName;
         }
 
-        string setlastName()
+        string getlastName()
         {
             return lastName;
         }
 
-        string setphoneNumber()
+        string getphoneNumber()
         {
             return phoneNumber;
         }
 
-        string setaccountNumber()
+        string getaccountNumber()
         {
             return accountNumber;
         }
 
-        string setaddress()
+        string getaddress()
         {
             return address;
         }
 
-        string setdateOpened()
+        string getdateOpened()
         {
             return dateOpened;
         }
 
-        string setdateClosed()
+        string getdateClosed()
         {
            return dateClosed;
         }
 
-        double setbalanced()
+        double getbalanced()
         {
             return balance;
         }
 
-        double setinterestRate()
+        double getinterestRate()
         {
             return intrestRate;
         }
 
-        double setmonthlyFee()
+        double getmonthlyFee()
         {
             return monthlyFee;
         }
 
-        bool setstatus()
+        bool getstatus()
         {
             return status;
         }
