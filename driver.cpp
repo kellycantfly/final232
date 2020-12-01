@@ -1,13 +1,21 @@
 #include <iostream>
 #include "USER.h"
 #include "account.h"
-#include "CreateAccount.cpp"
-#include "login.cpp"
+#include "function.h"
+#include "BST.h"
 using namespace std;
 
 
 int main()
 {
+
+	BST tree; // tree object
+
+	ofstream outFile; // file to write to
+
+	tree.readFile("accounts.txt"); // reads from accounts.txt at beginning
+	outFile.open("accounts.txt"); // writes to accounts.txt at end
+
 	for(;;) {
 	cout << "######################" << endl;
 	cout << "Welcome to Bear Bank" << endl;
@@ -26,14 +34,16 @@ int main()
 	}
 	switch(userSelection) {
 		case 1: {
-			// login.cpp
+			//login();
 			break;
 		}
 		case 2: {
-			badAccountCreationRequest(); // an function to error because normal users cannot open accounts
+			//badAccountCreationRequest(); // an function to error because normal users cannot open accounts
 			break;
 		}
 		case 3: {
+			tree.upload(outFile); // rewrites accounts.txt with information from session
+			outFile.close();
 			cout << "Goodbye!" << endl;
 			exit(1);
 		}
@@ -46,14 +56,3 @@ int main()
 	return 0;
 }
 
-void menu(int menuType) {
-	if(menuType == 1) {
-
-	}
-	if(menuType == 2) {
-
-	}
-	if (menuType == 3) {
-
-	}
-}
