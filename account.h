@@ -11,6 +11,8 @@ class Account {
         string lastName;
 
         bool status;
+        friend class BankOfficial;
+        friend class SystemAdmin;
     public:
         void setAccountID(string accID) {
             accountID = accID;
@@ -42,6 +44,7 @@ class AccountHolder : public Account {
         string accounts;
         string accountLog;
         friend class BankOfficial;
+        friend class SystemAdmin;
     public: 
         void setPhone(string phone) {
             phoneNumber = phone;
@@ -63,10 +66,6 @@ class AccountHolder : public Account {
 
 class BankOfficial : public Account {
     public: 
-        void checkforAccount(AccountHolder acc) {
-            acc.address = "233 Harrison Street";
-            cout << acc.getAddress() << endl;
-        }
         void openAccount() {
             
         }
