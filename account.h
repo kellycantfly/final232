@@ -1,123 +1,141 @@
-#ifndef ACCOUNT_H
-#define ACCOUNT_H
-
-#include <iostream>
 #include <string>
+#include <iostream>
 using namespace std;
 
-static int count = 1; // A counter to assign a unique account number
-
-class Account
-{
+class Account {
     private:
+        string accountID;
+        string username;
+        string password;
         string firstName;
         string lastName;
+
+        bool status;
+    public:
+        void setAccountID(string accID) {
+            accountID = accID;
+        }
+        void setUsername(string user) {
+            username = user;
+        }
+        void setPassword(string pass) {
+            password = pass;
+        }
+        void setfirstName(string name) {
+            firstName = name;
+        }
+        void setlastName(string name) {
+            lastName = name;
+        }
+        string getUsername() {
+            return username;
+        }
+};
+class AccountHolder : public Account {
+    private:
         string phoneNumber;
-        string accountNumber;
         string address;
         string dateOpened;
         string dateClosed;
+        string maturity;
+        string lastLogin;
+        string accounts;
+        string accountLog;
+        friend class BankOfficial;
+    public: 
+        void setPhone(string phone) {
+            phoneNumber = phone;
+        }
+        void setAddress(string userAddress) {
+            address = userAddress;
+        }
+        string getAddress() {
+            return address;
+        }
+        void setDateOpened(string date) {
+            dateOpened = date;
+        }
+        void setDateClosed(string date) {
+            dateClosed = date;
+        }
+        
+};
 
-        double balance;
-        double interestRate;
-        double monthlyFee;
-
-        bool status;    // open = true ---- closed = false
-
-    public:
-        int count;
-        Account()
-        {
-            string input;
-            cout<<"Enter inital balance: "<<endl;
-            getline(cin,input);
-            balance = stod(input);
-
-            time_t currentTime = time(NULL);
-            tm* timePtr = localtime(&currentTime);
-            dateOpened = to_string((timePtr->tm_mday))+"/"+ to_string((timePtr->tm_mon)+1) +"/"+ to_string((timePtr->tm_year)+1900);
+class BankOfficial : public Account {
+    public: 
+        void checkforAccount(AccountHolder acc) {
+            acc.address = "233 Harrison Street";
+            cout << acc.getAddress() << endl;
+        }
+        void openAccount() {
             
-            setaccountNumber(to_string(count));
-            count++;
         }
-        //======================================================================================
-        //            setters
-        //======================================================================================
-        void setfirstName( string x){ firstName = x; }
+        void closeAccount() {
 
-        void setlastName(string x) { lastName = x; }
+        }
+        void searchAccount() { // official can search by phone, address, customer name
+            
+        }
+        void depositToAccount(string accID, string password) {
 
-        void setphoneNumber( string x){ phoneNumber = x; }
+        }
+        void withdrawToAccounts(string accID, string password) {
 
-        void setaccountNumber(string x) { accountNumber = x; }
-
-        void setaddress( string x){ address = x; }
-
-        void setdateOpened( string x){ dateOpened = x; }
-
-        void setdateClosed( string x){ dateClosed = x; }
-
-        void setbalanced( double x){ balance = x; }
-
-        void setinterestRate( double x){ interestRate = x; }
-
-        void setmonthlyFee( double x){ monthlyFee = x; }
-
-        void setstatus( bool x){ status = x; }
-
-
-        //======================================================================================
-        //            getters
-        //======================================================================================
-        string getfirstName() { return firstName; }
-
-        string getlastName() { return lastName; }
-
-        string getphoneNumber() { return phoneNumber; }
-
-        string getaccountNumber() { return accountNumber; }
-
-        string getaddress() { return address; }
-
-        string getdateOpened() { return dateOpened; }
-
-        string getdateClosed() { return dateClosed; }
-
-        double getbalance() { return balance; }
-
-        double getinterestRate() { return interestRate; }
-
-        double getmonthlyFee() { return monthlyFee; }
-
-        bool getstatus() { return status; }
+        }
 };
 
+class SystemAdmin : public Account {
+    public: 
+        void createLogin() {
 
-class DailyCheckingAccount : public Account
-{
+        }
+        void disableAccount() {
 
+        }
+        void changePassword() {
+
+        }
+};
+
+class BankAccount {
+    private:
+        string accID;
+        string userID;
+        double balance;
+        double fee;
     public:
-        DailyCheckingAccount()
-        {
-            setmonthlyFee(0.0);
-            setinterestRate(0.0);
-            setstatus(1);
+        void setAccID(string accID) {
+
+        }
+        void setUserID(string userID) {
+
         }
 };
 
-class DailySavingAccount : public Account
-{
-
-    public:
-        DailySavingAccount()
-        {
-            setmonthlyFee(0.0);
-            string input;
-            cout<<"Enter Interest Rate: "<<endl;
-            getline(cin,input);
-            setinterestRate(stod(input));
-            setstatus(1);
+class SavingAccount : public BankAccount {
+    private:
+    double interestRate;
+    public: 
+        void setInterestRate(double intRate) {
+            interestRate = intRate;
         }
+
+
 };
 
-#endif
+class CheckingAccount : public BankAccount {
+
+};
+
+class CDAccount : public BankAccount {
+    private:
+    string creationDate;
+    int termLength;
+    string dateOpen;
+    string dateClose;
+    int maturity;
+    int interestRate;
+
+};
+
+
