@@ -1,3 +1,12 @@
+#ifndef ACCOUNT_H
+#define ACCOUNT_H
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+static int count = 1; // A counter to assign a unique account number
+
 class Account
 {
     private:
@@ -16,28 +25,36 @@ class Account
         bool status;    // open = true ---- closed = false
 
     public:
+        int count;
         Account()
         {
             string input;
             cout<<"Enter inital balance: "<<endl;
             getline(cin,input);
             balance = stod(input);
+
             cout<<"Enter First Name: "<<endl;
             getline(cin,input);
             firstName = input;
+
             cout<<"Enter Last Name: "<<endl;
             getline(cin,input);
             lastName = input;
+
             cout<<"Enter Phone Number: "<<endl;
             getline(cin,input);
             phoneNumber = input;
+
             cout<<"Enter Address: "<<endl;
             getline(cin,input);
             address = input;
+
             time_t currentTime = time(NULL);
             tm* timePtr = localtime(&currentTime);
             dateOpened = to_string((timePtr->tm_mday))+"/"+ to_string((timePtr->tm_mon)+1) +"/"+ to_string((timePtr->tm_year)+1900);
             
+            setaccountNumber(to_string(count));
+            count++;
         }
         //======================================================================================
         //            setters
@@ -135,7 +152,7 @@ class Account
            return dateClosed;
         }
 
-        double getbalanced()
+        double getbalance()
         {
             return balance;
         }
@@ -154,9 +171,9 @@ class Account
         {
             return status;
         }
-
         
 };
+
 
 class DailyCheckingAccount : public Account
 {
@@ -182,3 +199,5 @@ class DailySavingAccount : public Account
             setinterestRate(stod(input));
         }
 };
+
+#endif
