@@ -19,7 +19,7 @@ class Account
         string dateClosed;
 
         double balance;
-        double intrestRate;
+        double interestRate;
         double monthlyFee;
 
         bool status;    // open = true ---- closed = false
@@ -33,22 +33,6 @@ class Account
             getline(cin,input);
             balance = stod(input);
 
-            cout<<"Enter First Name: "<<endl;
-            getline(cin,input);
-            firstName = input;
-
-            cout<<"Enter Last Name: "<<endl;
-            getline(cin,input);
-            lastName = input;
-
-            cout<<"Enter Phone Number: "<<endl;
-            getline(cin,input);
-            phoneNumber = input;
-
-            cout<<"Enter Address: "<<endl;
-            getline(cin,input);
-            address = input;
-
             time_t currentTime = time(NULL);
             tm* timePtr = localtime(&currentTime);
             dateOpened = to_string((timePtr->tm_mday))+"/"+ to_string((timePtr->tm_mon)+1) +"/"+ to_string((timePtr->tm_year)+1900);
@@ -59,119 +43,53 @@ class Account
         //======================================================================================
         //            setters
         //======================================================================================
-        void setfirstName( string x)
-        {
-            firstName = x;
-        }
+        void setfirstName( string x){ firstName = x; }
 
-        void setlastName( string x)
-        {
-            lastName = x;
-        }
+        void setlastName(string x) { lastName = x; }
 
-        void setphoneNumber( string x)
-        {
-            phoneNumber = x;
-        }
+        void setphoneNumber( string x){ phoneNumber = x; }
 
-        void setaccountNumber( string x)
-        {
-            accountNumber = x;
-        }
+        void setaccountNumber(string x) { accountNumber = x; }
 
-        void setaddress( string x)
-        {
-            address = x;
-        }
+        void setaddress( string x){ address = x; }
 
-        void setdateOpened( string x)
-        {
-            dateOpened = x;
-        }
+        void setdateOpened( string x){ dateOpened = x; }
 
-        void setdateClosed( string x)
-        {
-            dateClosed = x;
-        }
+        void setdateClosed( string x){ dateClosed = x; }
 
-        void setbalanced( double x)
-        {
-            balance = x;
-        }
+        void setbalanced( double x){ balance = x; }
 
-        void setinterestRate( double x)
-        {
-            intrestRate = x;
-        }
+        void setinterestRate( double x){ interestRate = x; }
 
-        void setmonthlyFee( double x)
-        {
-            monthlyFee = x;
-        }
+        void setmonthlyFee( double x){ monthlyFee = x; }
 
-        void setstatus( bool x)
-        {
-            status = x;
-        }
+        void setstatus( bool x){ status = x; }
+
 
         //======================================================================================
         //            getters
         //======================================================================================
-        string getfirstName()
-        {
-            return firstName;
-        }
+        string getfirstName() { return firstName; }
 
-        string getlastName()
-        {
-            return lastName;
-        }
+        string getlastName() { return lastName; }
 
-        string getphoneNumber()
-        {
-            return phoneNumber;
-        }
+        string getphoneNumber() { return phoneNumber; }
 
-        string getaccountNumber()
-        {
-            return accountNumber;
-        }
+        string getaccountNumber() { return accountNumber; }
 
-        string getaddress()
-        {
-            return address;
-        }
+        string getaddress() { return address; }
 
-        string getdateOpened()
-        {
-            return dateOpened;
-        }
+        string getdateOpened() { return dateOpened; }
 
-        string getdateClosed()
-        {
-           return dateClosed;
-        }
+        string getdateClosed() { return dateClosed; }
 
-        double getbalance()
-        {
-            return balance;
-        }
+        double getbalance() { return balance; }
 
-        double getinterestRate()
-        {
-            return intrestRate;
-        }
+        double getinterestRate() { return interestRate; }
 
-        double getmonthlyFee()
-        {
-            return monthlyFee;
-        }
+        double getmonthlyFee() { return monthlyFee; }
 
-        bool getstatus()
-        {
-            return status;
-        }
-        
+        bool getstatus() { return status; }
 };
 
 
@@ -183,6 +101,7 @@ class DailyCheckingAccount : public Account
         {
             setmonthlyFee(0.0);
             setinterestRate(0.0);
+            setstatus(1);
         }
 };
 
@@ -197,6 +116,7 @@ class DailySavingAccount : public Account
             cout<<"Enter Interest Rate: "<<endl;
             getline(cin,input);
             setinterestRate(stod(input));
+            setstatus(1);
         }
 };
 

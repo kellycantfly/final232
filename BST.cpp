@@ -14,6 +14,7 @@ void BST::insert(Account& account)
 	insertNode(root, newNode); // passes root and newNode for insertion
 }
 
+
 // insertNode takes two pointers to Nodes. It uses the first parameter as a starting point and traverses
 // the tree, inserting the Node where its value is less than its parent Node.
 void BST::insertNode(Node*& nodePtr, Node*& newNode)
