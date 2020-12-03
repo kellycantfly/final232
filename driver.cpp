@@ -9,19 +9,23 @@ int main()
 {
 	int userSelection = 0;
 	BankOfficial* off  = new BankOfficial;
+	AccountHolder* hol = new AccountHolder;
 
 	vector<AccountHolder*> accountHolderVector;
 	vector<BankOfficial*> bankOfficialVector;
 	vector<SystemAdmin*> systemAdminVector;
+	vector<Account*> userVector;
 
+	userVector.emplace_back(off);
+	//userVector.emplace_back(hol);
 	bankOfficialVector.emplace_back(off);
+	accountHolderVector.emplace_back(hol);
 	
 	AccountHolder* currentAccountHolder = nullptr;
 	BankOfficial* currentBankOfficial = nullptr;
 	SystemAdmin* currentAdministrator = nullptr;
 
-	
-	//currentBankOfficial = off;
+	//currentAccountHolder = hol;
 
 	do{
 
@@ -61,12 +65,15 @@ int main()
 
 					switch (userSelection2) 
 					{
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+//                           ACCOUNT HOLDER
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 						case 1:
 						{
 							string input;
 							bool ifFound = false;
-							cout<< " Enter Account UserName"<< endl;
-							getline(cin,input);
+							cout<< "Enter Account UserName"<< endl;
+							cin>>input;
 							for (int a= 0; a<accountHolderVector.size(); a+=1)
 							{
 								if (accountHolderVector[a]->getUsername() == input);
@@ -83,6 +90,52 @@ int main()
 								if (currentAccountHolder->getPassword() == input)
 								{
 									cout<<" SUCCESFUL LOGIN"<<endl;
+									int accountHolderSelection = 0;
+									do
+									{	
+									try
+									{
+										cout << "######################" << endl;
+										cout << "[1] Change Password" << endl;
+										cout << "[2] View Accounts Information" << endl;
+										cout << "[3] View Account Transaction History" << endl;
+										cout << "[4] logout" << endl;
+										cout << "######################" << endl;
+
+										cin >> accountHolderSelection;
+										if ((!cin) || (accountHolderSelection < 0) || (accountHolderSelection > 4))
+										{
+											throw accountHolderSelection;
+										}
+										switch(accountHolderSelection)
+										{
+											case 1:
+											{
+												string input;
+												cout<<"Please Enter New Password"<<endl;
+												cin>>input;
+												currentAccountHolder->setPassword(input);
+												cout<<"Password Has Been Set Too : "<<currentAccountHolder->getPassword()<<endl;;
+												break;
+											}
+											case 2:
+											{
+//veiw account Information
+											}
+
+											case 3:
+											{
+//veiw account transaction
+											}
+										}
+									}
+									catch(int)
+									{
+										cout << "Invalid input... Restarting" << endl;
+										cin.clear();
+										cin.ignore();
+									}
+									}	while (accountHolderSelection != 4 );
 								}
 
 								else
@@ -98,7 +151,9 @@ int main()
 							break;
 
 						}
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//              BANK OFFICIALS
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 						case 2:
 						{
 							string input;
@@ -122,6 +177,134 @@ int main()
 								if (currentBankOfficial->getPassword() == input)
 								{
 									cout<<" SUCCESFUL LOGIN"<<endl;
+									int bankOfficialSelection = 0;
+									do
+									{	
+									try
+									{
+										cout << "######################" << endl;
+										cout << "[1] open BankAccount" << endl;
+										cout << "[2] close BankAccount" << endl;
+										cout << "[3] deposit" << endl;
+										cout << "[4] withdraw" << endl;
+										cout << "[5] Search for account" << endl;
+										cout << "[6] logout" << endl;
+										cout << "######################" << endl;
+
+										cin >> bankOfficialSelection;
+										if ((!cin) || (bankOfficialSelection < 0) || (bankOfficialSelection > 6))
+										{
+											throw bankOfficialSelection;
+										}
+										switch(bankOfficialSelection)
+										{
+											case 1:
+											{
+												AccountHolder* newUser = currentBankOfficial->openAccount();
+												accountHolderVector.emplace_back(newUser);
+												break;
+											}
+											case 2:
+											{
+//close bank account
+											}
+
+											case 3:
+											{
+												string input;
+												bool ifFound = false;
+												cout<< "Enter Account Of Deposit UserName"<< endl;
+												cin>>input;
+												for (int a= 0; a<accountHolderVector.size(); a+=1)
+												{
+
+													if (accountHolderVector[a]->getUsername() == input)
+													{
+														ifFound = true;
+														currentAccountHolder = accountHolderVector[a];
+													}	
+												}
+												if (ifFound == true)
+												{
+													cout<<"Enter Account Password"<<endl;
+													cin>>input;
+													if (currentBankOfficial->getPassword() == input)
+													{
+														cout<<"Account SUCCESFULLY LOGGED-IN"<<endl;
+// deposite stuff
+// currentAccountHolder set to person who wants to make deposit
+// still need the specific account of that user to make transactio in
+
+													}
+													else
+													{
+														cout<<"INVALID PASSWORD"<<endl;
+													}
+												}
+												else
+												{
+													cout<< "INVALID USERNAME"<<endl;
+												}
+												break;
+											}
+
+											case 4:
+											{
+												string input;
+												bool ifFound = false;
+												cout<< "Enter Account Of Withdraw UserName"<< endl;
+												cin>>input;
+												for (int a= 0; a<accountHolderVector.size(); a+=1)
+												{
+
+													if (accountHolderVector[a]->getUsername() == input)
+													{
+														ifFound = true;
+														currentAccountHolder = accountHolderVector[a];
+													}	
+												}
+												if (ifFound == true)
+												{
+													cout<<"Enter Account Password"<<endl;
+													cin>>input;
+													if (currentBankOfficial->getPassword() == input)
+													{
+														cout<<"Account SUCCESFULLY LOGGED-IN"<<endl;
+// Withdraw stuff 
+// currentAccountHolder set to person who wants to make withdraw
+// still need the specific account of that user to make transaction in
+
+													}
+													else
+													{
+														cout<<"INVALID PASSWORD"<<endl;
+													}
+												}
+												else
+												{
+													cout<< "INVALID USERNAME"<<endl;
+												}
+												break;
+											}
+
+											case 5:
+											{
+
+//search for account
+// maybe another jump meanu with search by;
+// phonenumber, username, address, name...
+
+											}
+										}
+									}
+									catch(int)
+									{
+										cout << "Invalid input... Restarting" << endl;
+										cin.clear();
+										cin.ignore();
+									}
+									}	while (bankOfficialSelection != 6);
+
 								}
 								else
 								{
@@ -134,7 +317,9 @@ int main()
 							}
 							break;
 						}
-
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//                  SYSTEM ADMIN
+///////////////////////////////////////////////////////////////////////////////////////////////////
 						case 3:
 						{
 							string input;
@@ -158,6 +343,63 @@ int main()
 								if (currentAdministrator->getPassword() == input)
 								{
 									cout<<" SUCCESFUL LOGIN"<<endl;
+									int administratorSelection = 0;
+									do
+									{	
+									try
+									{
+										cout << "######################" << endl;
+										cout << "[1] Create Bank Official" << endl;
+										cout << "[2] Disable Bank Official" << endl;
+										cout << "[3] Modiffy Bank Account types" << endl;
+										cout << "[4] Reteive User login ID" << endl;
+										cout << "[5] Change User Password" << endl;
+										cout << "[6] Logout" << endl;
+										cout << "######################" << endl;
+
+										cin >> administratorSelection;
+										if ((!cin) || (administratorSelection < 0) || (administratorSelection > 6))
+										{
+											throw administratorSelection;
+										}
+										switch(administratorSelection)
+										{
+											case 1:
+											{
+												BankOfficial* newOfficial  = new BankOfficial;
+												bankOfficialVector.emplace_back(newOfficial);
+												break;
+											}
+											case 2:
+											{
+//disable BankOfficial
+											}
+
+											case 3:
+											{
+//modify bank Account types
+											}
+
+											case 4:
+											{
+												cout<< "Enter First Name Account Is Held Under"<<endl;
+// retreive user login ID
+											}
+
+											case 5:
+											{
+//chnage user password
+											}
+										}
+									}
+									catch(int)
+									{
+										cout << "Invalid input... Restarting" << endl;
+										cin.clear();
+										cin.ignore();
+									}
+									}	while (administratorSelection != 6);
+
 								}
 								else
 							{
