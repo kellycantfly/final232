@@ -1,184 +1,199 @@
-class Account
-{
-    private:
-        string firstName;
-        string lastName;
-        string phoneNumber;
-        string accountNumber;
-        string address;
-        string dateOpened;
-        string dateClosed;
+#ifndef ACCOUNT_H
+#define ACCOUNT_H
+#include "bankaccount.h"
+#include <string>
+#include <iostream>
+using namespace std;
 
-        double balance;
-        double intrestRate;
-        double monthlyFee;
+class Account {
+private:
+    string accountID;
+    string username;
+    string password;
+    string firstName;
+    string lastName;
 
-        bool status;    // open = true ---- closed = false
+    bool status;
 
-    public:
-        Account()
-        {
-            string input;
-            cout<<"Enter inital balance: "<<endl;
-            getline(cin,input);
-            balance = stod(input);
-            cout<<"Enter First Name: "<<endl;
-            getline(cin,input);
-            firstName = input;
-            cout<<"Enter Last Name: "<<endl;
-            getline(cin,input);
-            lastName = input;
-            cout<<"Enter Phone Number: "<<endl;
-            getline(cin,input);
-            phoneNumber = input;
-            cout<<"Enter Address: "<<endl;
-            getline(cin,input);
-            address = input;
-            time_t currentTime = time(NULL);
-            tm* timePtr = localtime(&currentTime);
-            dateOpened = to_string((timePtr->tm_mday))+"/"+ to_string((timePtr->tm_mon)+1) +"/"+ to_string((timePtr->tm_year)+1900);
-            
-        }
-        //======================================================================================
-        //            setters
-        //======================================================================================
-        void setfirstName( string x)
-        {
-            firstName = x;
-        }
+    friend class BankOfficial;
+    friend class SystemAdmin;
 
-        void setlastName( string x)
-        {
-            lastName = x;
-        }
+public:
+    void setAccountID(string accID) {
+        accountID = accID;
+    }
+    void setUsername(string user) {
+        username = user;
+    }
+    void setPassword(string pass) {
+        password = pass;
+    }
+    void setfirstName(string name) {
+        firstName = name;
+    }
+    void setlastName(string name) {
+        lastName = name;
+    }
+    string getUsername() {
+        return username;
+    }
+    string getPassword() {
+        return password;
+    }
+    string getAccountID() {
+        return accountID;
+    }
+};
+class AccountHolder : public Account {
+private:
+    string phoneNumber;
+    string address;
+    string dateOpened;
+    string dateClosed;
+    string maturity;
+    string lastLogin;
+    string accounts;
+    string accountLog;
 
-        void setphoneNumber( string x)
-        {
-            phoneNumber = x;
-        }
+    friend class BankOfficial;
+    friend class SystemAdmin;
 
-        void setaccountNumber( string x)
-        {
-            accountNumber = x;
-        }
+public:
+    void setPhone(string phone) {
+        phoneNumber = phone;
+    }
+    void setAddress(string userAddress) {
+        address = userAddress;
+    }
+    string getAddress() {
+        return address;
+    }
+    void setDateOpened(string date) {
+        dateOpened = date;
+    }
+    void setDateClosed(string date) {
+        dateClosed = date;
+    }
 
-        void setaddress( string x)
-        {
-            address = x;
-        }
-
-        void setdateOpened( string x)
-        {
-            dateOpened = x;
-        }
-
-        void setdateClosed( string x)
-        {
-            dateClosed = x;
-        }
-
-        void setbalanced( double x)
-        {
-            balance = x;
-        }
-
-        void setinterestRate( double x)
-        {
-            intrestRate = x;
-        }
-
-        void setmonthlyFee( double x)
-        {
-            monthlyFee = x;
-        }
-
-        void setstatus( bool x)
-        {
-            status = x;
-        }
-
-        //======================================================================================
-        //            getters
-        //======================================================================================
-        string getfirstName()
-        {
-            return firstName;
-        }
-
-        string getlastName()
-        {
-            return lastName;
-        }
-
-        string getphoneNumber()
-        {
-            return phoneNumber;
-        }
-
-        string getaccountNumber()
-        {
-            return accountNumber;
-        }
-
-        string getaddress()
-        {
-            return address;
-        }
-
-        string getdateOpened()
-        {
-            return dateOpened;
-        }
-
-        string getdateClosed()
-        {
-           return dateClosed;
-        }
-
-        double getbalanced()
-        {
-            return balance;
-        }
-
-        double getinterestRate()
-        {
-            return intrestRate;
-        }
-
-        double getmonthlyFee()
-        {
-            return monthlyFee;
-        }
-
-        bool getstatus()
-        {
-            return status;
-        }
-
-        
 };
 
-class DailyCheckingAccount : public Account
-{
+class BankOfficial : public Account {
+public:
 
-    public:
-        DailyCheckingAccount()
+    BankOfficial()
+    {
+        string name, pass;
+        cout << "Enter new Official username" << endl;
+        cin >> name;
+        name.insert(0, "O");
+        setUsername(name);
+
+        cout << "Enter new Official password" << endl;
+        cin >> pass;
+        setPassword(pass);
+    }
+
+    void openAccount()
+    {
+        AccountHolder* holder = new AccountHolder;
+        openAccount(holder);
+    }
+    BankAccount* openAccount(AccountHolder* holder) {
+        cout << "New account menu" << endl;
+        if (validateLogin())
         {
-            setmonthlyFee(0.0);
-            setinterestRate(0.0);
+            char type;
+            cout << "[C]hecking, [S]aving, C[D]" << endl;
+            try
+            {
+                cin >> type;
+                if ((!cin) && (type != 'C') && (type != 'S') && (type != 'D'))
+                {
+                    throw type;
+                }
+                else
+                {
+                    switch (type)
+                    {
+                    case 'C':
+                    {
+                        CheckingAccount* newChecking = new CheckingAccount;
+                        newChecking->setAccID(holder->getAccountID());
+                        return newChecking;
+                        break;
+                    }
+                    case 'S':
+                    {
+                        SavingAccount* newSaving = new SavingAccount;
+                        newSaving->setAccID(holder->getAccountID());
+                        return newSaving;
+                        break;
+                    }
+                    case 'D':
+                    {
+                        CDAccount* newCD = new CDAccount;
+                        newCD->setAccID(holder->getAccountID());
+                        return newCD;
+                        break;
+                    }
+                    }
+                }
+            }
+            catch (char)
+            {
+                cout << "Invalid account type" << endl;
+                cin.clear();
+                cin.ignore();
+            }
         }
+        else
+        {
+            cout << "Invalid credentials for opening account" << endl;
+        }
+        return NULL;
+    }
+    void closeAccount() {
+
+    }
+    void searchAccount() { // official can search by phone, address, customer name
+
+    }
+    void depositToAccount(string accID, string password) {
+
+    }
+    void withdrawToAccounts(string accID, string password) {
+
+    }
+    bool validateLogin()
+    {
+        string name, pass;
+
+        cout << "Username: \n";
+        cin >> name;
+        cout << "Password: \n";
+        cin >> pass;
+
+        if ((getUsername() == name) && (getPassword() == pass))
+        {
+            return true;
+        }
+        else
+            return false;
+
+    }
 };
 
-class DailySavingAccount : public Account
-{
+class SystemAdmin : public Account {
+public:
+    void createLogin() {
 
-    public:
-        DailySavingAccount()
-        {
-            setmonthlyFee(0.0);
-            string input;
-            cout<<"Enter Interest Rate: "<<endl;
-            getline(cin,input);
-            setinterestRate(stod(input));
-        }
+    }
+    void disableAccount() {
+
+    }
+    void changePassword() {
+
+    }
 };
+
+#endif
