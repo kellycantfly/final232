@@ -75,6 +75,35 @@ class AccountHolder : public Account {
             dateClosed = date;
         }
 
+        AccountHolder()
+        {
+            string name, pass,fName, lName, add, phone;
+            cout << "Enter new AccountHolder username" << endl;
+            cin >> name;
+            name.insert(0, "H");
+            setUsername(name);
+
+            cout << "Enter new AccountHolder password" << endl;
+            cin >> pass;
+            setPassword(pass);
+
+            cout << "Enter new AccountHolder First Name" << endl;
+            cin >> fName;
+            setfirstName(fName);
+
+            cout << "Enter new AccountHolder LastName" << endl;
+            cin >> lName;
+            setlastName(lName);
+
+            cout << "Enter new AccountHolder Address" << endl;
+            cin >> add;
+            setAddress(add);
+
+            cout << "Enter new AccountHolder Phone Number" << endl;
+            cin >> phone;
+            setPhone(phone);
+        }
+
 };
 
 class BankOfficial : public Account {
@@ -93,10 +122,10 @@ class BankOfficial : public Account {
             setPassword(pass);
         }
 
-        void openAccount()
+        AccountHolder* openAccount()
         {
             AccountHolder* holder = new AccountHolder;
-            openAccount(holder);
+            return holder;
         }
         BankAccount* openAccount(AccountHolder* holder) {
             cout << "New account menu" << endl;
