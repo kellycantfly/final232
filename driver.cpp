@@ -1,58 +1,63 @@
 #include <iostream>
-#include "USER.h"
-#include "account.h"
 #include "function.h"
 #include "BST.h"
+#include "USER.h"
+#include <fstream>
+#include <vector>
 using namespace std;
-
 
 int main()
 {
 
-	BST tree; // tree object
+	OFFICAL o; // initial official to open/close accounts
+//	HOLDER h;
+	vector<USER> users; // Used to search and confirm user information
 
-	ofstream outFile; // file to write to
-
-	tree.readFile("accounts.txt"); // reads from accounts.txt at beginning
-	outFile.open("accounts.txt"); // writes to accounts.txt at end
-
-	for(;;) {
-	cout << "######################" << endl;
-	cout << "Welcome to Bear Bank" << endl;
-	cout << "[1] Login" << endl;
-	cout << "[2] Create an Account" << endl;
-	cout << "[3[ Exit" << endl;
-	cout << "######################" << endl;
-	string buffer = "";
+//	users.push_back(h);
+	users.push_back(o);
 	int userSelection = 0;
-	getline(cin,buffer);
-	try {
-		userSelection = stoi(buffer);
-	}catch(...) {
-		cout << "Invalid input.. Restarting..." << endl;
-		main();
-	}
-	switch(userSelection) {
-		case 1: {
-			//login();
-			break;
+
+	do{
+
+		try
+		{
+			cout << "######################" << endl;
+			cout << "Welcome to Bear Bank" << endl;
+			cout << "[1] Login" << endl;
+			cout << "[2] Create an Account" << endl;
+			cout << "[3] Exit" << endl;
+			cout << "######################" << endl;
+
+			cin >> userSelection;
+			if ((!cin) || (userSelection < 0) || (userSelection > 3))
+			{
+				throw userSelection;
+			}
+
+			switch (userSelection) 
+			{
+				case 1:
+				{
+					login(users);
+					break;
+				}
+				case 2:
+				{
+					break;
+				}
+			}
 		}
-		case 2: {
-			//badAccountCreationRequest(); // an function to error because normal users cannot open accounts
-			break;
+		catch(int)
+		{
+			cout << "Invalid input... Restarting" << endl;
+			cin.clear();
+			cin.ignore();
 		}
-		case 3: {
-			tree.upload(outFile); // rewrites accounts.txt with information from session
-			outFile.close();
-			cout << "Goodbye!" << endl;
-			exit(1);
-		}
-		default: {
-			cout << "An error has occured, restarting" << endl;
-			main();
-		}
-	}
-	}
+
+	} while (userSelection != 3);
+
+	cout << "Goodbye!" << endl;
+
 	return 0;
 }
 
