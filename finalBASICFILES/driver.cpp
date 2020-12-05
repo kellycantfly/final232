@@ -78,7 +78,7 @@ int main()
 							// searches existing BankOfficials
 							for (int i = 0; i < bankOfficialVector.size(); i++)
 							{
-								if ((bankOfficialVector[i]->getUsername() == name) && (bankOfficialVector[i]->getPassword() == pass))
+								if ((bankOfficialVector[i]->getUsername() == name))
 								{
 									currentBankOfficial = bankOfficialVector[i];
 								}
@@ -112,7 +112,6 @@ int main()
 							// searches existing AccountHolders
 							for (int i = 0; i < accountHolderVector.size(); i++)
 							{
-								cout << accountHolderVector[i]->getUsername() << " " << accountHolderVector[i]->getAccountID() <<endl;
 								if (accountHolderVector[i]->getUsername() == name)
 								{
 									currentAccountHolder = accountHolderVector[i];
@@ -148,60 +147,49 @@ int main()
 				// **** CURRENTLY WORKING ON THIS. IT ADDS TO VECTORS BUT BREAKS [1]
 				case 3: // Create a User Account
 				{
-					cout << "A system administrator is required to open a new User Account\n";
-					if (currentSystemAdmin != NULL) // checks a SystemAdmin is logged in
+					if (currentSystemAdmin != NULL)
 					{
+						char type;
+						cout << "[A]dmin, [O]fficial, [H]older" << endl;
 						try
 						{
-							Account* temp = currentSystemAdmin->createUser(); // logged in SystemAdmin creates a new Account
-							char c = temp->getUsername().at(0); // checks type of opened account by passing username
-
-							if (temp == NULL) // tests for proper user creation
+							cin >> type;
+							if ((!cin) && (type != 'A') && (type != 'O') && (type != 'H'))
 							{
-								throw 0; // jumps to error handling creation
+								throw type; // jumps to error handling menu
 							}
 							else
 							{
-								userVector.push_back(temp); // adds user to userVector
-
-								switch (c)
+								switch (type)
 								{
-									case 'H':
+									case 'A': // SystemAdmin
 									{
-										// copies Account to AccountHolder object
-										AccountHolder* newHolder = new AccountHolder(temp->getAccountID(),temp->getUsername(),temp->getPassword(),temp->getfirstName(),temp->getlastName());
-										accountHolderVector.push_back(newHolder); // adds to vector
+										systemAdminVector.push_back(currentSystemAdmin->createAdmin());
+										break;
 									}
-									case 'A':
+									case 'O': // BankOfficial
 									{
-										// copies Account to SystemAdmin object
-										SystemAdmin* newAdmin = new SystemAdmin(temp->getAccountID(), temp->getUsername(), temp->getPassword(), temp->getfirstName(), temp->getlastName());
-										systemAdminVector.push_back(newAdmin); // adds to vector
+										bankOfficialVector.push_back(currentSystemAdmin->createOffical());
+										break;
 									}
-									case 'O':
+									case 'H': // AccountHolder
 									{
-										// copies Account to BankOfficial object
-										BankOfficial* newOff = new BankOfficial(temp->getAccountID(), temp->getUsername(), temp->getPassword(), temp->getfirstName(), temp->getlastName());
-										bankOfficialVector.push_back(newOff); // adds to vector
+										accountHolderVector.push_back(currentSystemAdmin->createHolder());
+										break;
 									}
 								}
-
 							}
-							delete temp;
 						}
-						catch (int) // error handling creation
+						catch (char) // error handling menu
 						{
-							cout << "User creation failed" << endl;
-
+							cout << "Invalid user account type" << endl;
 							cin.clear();
 							cin.ignore();
-							break;
 						}
-
 					}
 					else
 					{
-						cout << "Please log in a valid System Admin\n";
+						cout << "Only a System Admin can create a user account. Please log in Admin\n";
 					}
 
 					break;
@@ -226,6 +214,18 @@ int main()
 		}
 
 	} while (userSelection != 5); // an input of 5 will close the program
+
+	cout << "All users: \n";
+	for (int i = 0; i < userVector.size(); i++)
+	{
+		cout << userVector[i]->getAccountID() << " " << userVector[i]->getUsername() << " " << userVector[i]->getPassword() << endl;
+	}
+
+	cout << "SystemAdmins: \n";
+	for (int i = 0; i < systemAdminVector.size(); i++)
+	{
+		cout << systemAdminVector[i]->getAccountID() << " " << systemAdminVector[i]->getUsername() << " " << systemAdminVector[i]->getPassword() << endl;
+	}
 
 	cout << "Goodbye!" << endl;
 
