@@ -15,12 +15,6 @@ int main()
 	vector<AccountHolder*> accountHolderVector; // holds AccountHolders
 	vector<BankOfficial*> bankOfficialVector; // holds BankOfficials
 	vector<SystemAdmin*> systemAdminVector; // holds SystemAdmins
-	vector<Account*> userVector; // holds Users
-
-	// initial adds to User vector
-	//userVector.emplace_back(off);
-	//userVector.emplace_back(hol);
-	userVector.emplace_back(admin);
 
 	// initial adds to subclass vectors
 	//bankOfficialVector.emplace_back(off);
@@ -48,18 +42,18 @@ int main()
 
 			cin >> userSelection;
 
-			if ((!cin) || (userSelection < 0) || (userSelection > 5))
+			if ((!cin) || (userSelection < 0) || (userSelection > 10))
 			{
 				throw userSelection; // jumps to error handling menu
 			}
 
 			switch (userSelection) 
 			{
-				// *** CURRENTLY WORKING ON THIS. IT WORKS INITIALLY BUT NOT AFTER [3]CREATE USER ACCOUNT
 				case 1: // Login
 				{
 					string name, pass;
 					char type;
+					int userSelection2 = 0; // 1 = Official, 2 = Admin, 3 = Holder
 
 					// User prompts
 					cout << "Username :";
@@ -81,6 +75,7 @@ int main()
 								if ((bankOfficialVector[i]->getUsername() == name))
 								{
 									currentBankOfficial = bankOfficialVector[i];
+									userSelection2 = 1;
 									cout << "Successful login\n";
 								}
 							}
@@ -94,6 +89,7 @@ int main()
 								if (systemAdminVector[i]->getUsername() == name)
 								{
 									currentSystemAdmin = systemAdminVector[i];
+									userSelection2 = 2;
 									cout << "Successful login\n";
 								}
 							}
@@ -107,6 +103,7 @@ int main()
 								if (accountHolderVector[i]->getUsername() == name)
 								{
 									currentAccountHolder = accountHolderVector[i];
+									userSelection2 = 3;
 									cout << "Successful login\n";
 								}
 							}
@@ -114,6 +111,34 @@ int main()
 							break;
 						}
 					}
+
+					// USER MENU
+					if (userSelection2 != 0)
+					{
+						switch (userSelection2)
+						{
+							case 1: // Bank Official
+							{
+								cout << "BANK OFFICIAL MENU: \n";
+								break;
+							}
+							case 2: // Admin
+							{
+								cout << "SYSTEM ADMIN MENU: \n";
+								break;
+							}
+							case 3: // Holder
+							{
+								cout << "ACCOUNT HOLDER MENU: \n";
+								break;
+							}
+						}
+					}
+					else
+					{
+						throw userSelection2;
+					}
+
 
 					break;
 				}
@@ -132,7 +157,6 @@ int main()
 
 					break;
 				}
-				// **** CURRENTLY WORKING ON THIS. IT ADDS TO VECTORS BUT BREAKS [1]
 				case 3: // Create a User Account
 				{
 					if (currentSystemAdmin != NULL)
@@ -203,16 +227,22 @@ int main()
 
 	} while (userSelection != 5); // an input of 5 will close the program
 
-	cout << "All users: \n";
-	for (int i = 0; i < userVector.size(); i++)
-	{
-		cout << userVector[i]->getAccountID() << " " << userVector[i]->getUsername() << " " << userVector[i]->getPassword() << endl;
-	}
-
 	cout << "SystemAdmins: \n";
 	for (int i = 0; i < systemAdminVector.size(); i++)
 	{
 		cout <<systemAdminVector[i]->getUsername() << endl;
+	}
+
+	cout << "BankOfficials: \n";
+	for (int i = 0; i < bankOfficialVector.size(); i++)
+	{
+		cout << bankOfficialVector[i]->getUsername() << endl;
+	}
+
+	cout << "AccountHolders: \n";
+	for (int i = 0; i < accountHolderVector.size(); i++)
+	{
+		cout << accountHolderVector[i]->getUsername() << endl;
 	}
 
 	cout << "Goodbye!" << endl;
