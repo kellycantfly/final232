@@ -7,10 +7,15 @@ using namespace std;
 
 class savingAccount : public checkingAccount {
     public:
-        savingAccount(double IR) {
-            
-            balance = 0;
+        savingAccount(string acc, string userHolderID, string stat, double charge, double IR, double bal, string activity) {
+            accID = acc;
+            userID = userHolderID;
+            status = stat;
             interestRate = IR;
+            fee = charge;
+            balance = bal;
+            log = activity;
+
         }
         virtual void deposit(int amt) {
             if(amt > 0) {
@@ -26,7 +31,7 @@ class savingAccount : public checkingAccount {
             interestRate = IR;
         }
 
-        virtual double getBalance() {
+        double getBalance() {
             return balance;
         }
        

@@ -7,10 +7,13 @@ using namespace std;
 
 class checkingAccount {
     protected:
+        string accID;
         string userID;
+        string status;
         double balance;
         double fee;
         double interestRate;
+        string log;
     public: 
         checkingAccount() {
             srand(time(0));
@@ -21,9 +24,26 @@ class checkingAccount {
                 accID += to_string(random);
             }
             accID = "C" + userID;
+            status = "Active";
             balance = 0;
             fee = 0;
             interestRate = 0;
+        }
+        checkingAccount(string acc, string userHolderID, string stat, double charge, double IR, double bal, string activity) {
+            accID = acc;
+            userID = userHolderID;
+            status = stat;
+            interestRate = IR;
+            fee = charge;
+            balance = bal;
+            log = activity;
+
+        }
+        string getAccountID() {
+            return accID;
+        }
+        string getUserID() {
+            return userID;
         }
         void deposit(int amt) {
             if(amt > 0) {

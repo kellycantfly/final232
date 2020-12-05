@@ -8,10 +8,22 @@ using namespace std;
 class cdAccount : public checkingAccount {
     private:
         string dateOpen;
+        string term;
         string dateClose;
-        int penalty;
+        double penalty;
     public: 
-        
+        cdAccount(string acc, string userHolderID, string stat, double charge, double IR, double bal, string date, string amountOfTime, double pen, string activity) {
+            accID = acc;
+            userID = userHolderID;
+            status = stat;
+            interestRate = IR;
+            fee = charge;
+            balance = bal;
+            log = activity;
+            dateOpen = date;
+            penalty = pen;
+            term = amountOfTime;
+        }
        
 
 };
