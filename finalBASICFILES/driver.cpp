@@ -8,9 +8,7 @@ using namespace std;
 int main()
 {
 
-	ofstream outFile;
-
-	outFile.open("account.txt");
+	ofstream outFile("account.txt",ios::app);
 
 	int userSelection = 0; // for intial menu
 	BankOfficial* off = new BankOfficial; // initial BankOfficial object
@@ -48,7 +46,7 @@ int main()
 
 			cin >> userSelection;
 
-			if ((!cin) || (userSelection < 0) || (userSelection > 10))
+			if ((!cin) || (userSelection < 0) || (userSelection > 6))
 			{
 				throw userSelection; // jumps to error handling menu
 			}
@@ -124,7 +122,7 @@ int main()
 				{
 					if (currentAccountHolder != NULL) // checks an AccountHolder is logged in
 					{
-						if (currentBankOfficial != NULL)
+						if (currentBankOfficial != NULL) // checks a BankOfficial is logged in
 						{
 							// logged in BankOfficial opens an account for logged in AccountHolder
 							currentBankOfficial->openAccount(currentAccountHolder);
@@ -144,7 +142,7 @@ int main()
 				}// ***END CASE 2***
 				case 3: // Create a User Account
 				{
-					if (currentSystemAdmin != NULL)
+					if (currentSystemAdmin != NULL) // checks a SystemAdmin is logged in
 					{
 						char type;
 						cout << "[A]dmin, [O]fficial, [H]older" << endl;
@@ -205,9 +203,9 @@ int main()
 				{
 					if (currentAccountHolder != NULL) // checks an AccountHolder is logged in
 					{
-						if (currentBankOfficial != NULL)
+						if (currentBankOfficial != NULL) // checks a BankOfficial is logged in
 						{
-							// logged in BankOfficial opens an account for logged in AccountHolder
+							// logged in BankOfficial closes an account for logged in AccountHolder
 							currentBankOfficial->closeAccount(currentAccountHolder, outFile);
 						}
 						else
@@ -231,7 +229,7 @@ int main()
 			cin.ignore();
 		}
 
-	} while (userSelection != 6); // an input of 5 will close the program
+	} while (userSelection != 6); // an input of 6 will close the program
 
 
 
