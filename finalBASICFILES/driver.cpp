@@ -8,8 +8,8 @@ using namespace std;
 int main()
 {
 	int userSelection = 0; // for intial menu
-	BankOfficial* off = new BankOfficial; // initial BankOfficial object
-	AccountHolder* hol = new AccountHolder; // initial AccountHolder object
+	//BankOfficial* off = new BankOfficial; // initial BankOfficial object
+	//AccountHolder* hol = new AccountHolder; // initial AccountHolder object
 	SystemAdmin* admin = new SystemAdmin; // initial SystemAdmin object
 
 	vector<AccountHolder*> accountHolderVector; // holds AccountHolders
@@ -18,18 +18,18 @@ int main()
 	vector<Account*> userVector; // holds Users
 
 	// initial adds to User vector
-	userVector.emplace_back(off);
-	userVector.emplace_back(hol);
+	//userVector.emplace_back(off);
+	//userVector.emplace_back(hol);
 	userVector.emplace_back(admin);
 
 	// initial adds to subclass vectors
-	bankOfficialVector.emplace_back(off);
-	accountHolderVector.emplace_back(hol);
+	//bankOfficialVector.emplace_back(off);
+	//accountHolderVector.emplace_back(hol);
 	systemAdminVector.emplace_back(admin);
 
 	AccountHolder* currentAccountHolder = nullptr; // AccountHolder is currently logged out
-	BankOfficial* currentBankOfficial = off; // off is logged in. could be changed
-	SystemAdmin* currentSystemAdmin = admin; // admin is logged in. could be changed
+	BankOfficial* currentBankOfficial = nullptr; // off is logged in. could be changed
+	SystemAdmin* currentSystemAdmin = nullptr; // admin is logged in. could be changed
 
 
 	do{
@@ -81,11 +81,7 @@ int main()
 								if ((bankOfficialVector[i]->getUsername() == name))
 								{
 									currentBankOfficial = bankOfficialVector[i];
-								}
-								else
-								{
-									cout << "No matching Official\n";
-									break;
+									cout << "Successful login\n";
 								}
 							}
 							break;
@@ -98,11 +94,7 @@ int main()
 								if (systemAdminVector[i]->getUsername() == name)
 								{
 									currentSystemAdmin = systemAdminVector[i];
-								}
-								else
-								{
-									cout << "No matching Admin\n";
-									break;
+									cout << "Successful login\n";
 								}
 							}
 							break;
@@ -115,11 +107,7 @@ int main()
 								if (accountHolderVector[i]->getUsername() == name)
 								{
 									currentAccountHolder = accountHolderVector[i];
-								}
-								else
-								{
-									cout << "No matching Account Holder\n";
-									break;
+									cout << "Successful login\n";
 								}
 							}
 
@@ -224,7 +212,7 @@ int main()
 	cout << "SystemAdmins: \n";
 	for (int i = 0; i < systemAdminVector.size(); i++)
 	{
-		cout << systemAdminVector[i]->getAccountID() << " " << systemAdminVector[i]->getUsername() << " " << systemAdminVector[i]->getPassword() << endl;
+		cout <<systemAdminVector[i]->getUsername() << endl;
 	}
 
 	cout << "Goodbye!" << endl;
