@@ -1,453 +1,292 @@
+#include "Classes/official.h"
+#include "Classes/admin.h"
+#include "Classes/accountHolder.h"
+#include "driverMenu.h"
 #include <iostream>
-#include "account.h"
-#include "bankaccount.h"
-#include <fstream>
 #include <vector>
+#include <string>
+#include <sstream>
+#include <time.h>
+#include <filesystem>
+namespace fs = filesystem;
+
 using namespace std;
 
-int main()
-{
-	int userSelection = 0;
-	BankOfficial* off  = new BankOfficial;
-	AccountHolder* hol = new AccountHolder;
 
-	vector<AccountHolder*> accountHolderVector;
-	vector<BankOfficial*> bankOfficialVector;
-	vector<SystemAdmin*> systemAdminVector;
-	vector<Account*> userVector;
+bool validateLogin(string username, string password, int accType, vector<official> &officials, vector<admin> &admins, vector<accountHolder> &clients);
+void retryLogin(int accType, vector<official> &officials, vector<admin> &admins, vector<accountHolder> &clients);
+void loadUsers(vector<official> &officials, vector<admin> &admins, vector<accountHolder> &clients);
+int main () {
+    
+    vector<official> officials;
+    vector<admin> admins;
+    vector<accountHolder> clients;
 
-	userVector.emplace_back(off);
-	//userVector.emplace_back(hol);
-	bankOfficialVector.emplace_back(off);
-	accountHolderVector.emplace_back(hol);
-	
-	AccountHolder* currentAccountHolder = nullptr;
-	BankOfficial* currentBankOfficial = nullptr;
-	SystemAdmin* currentAdministrator = nullptr;
+    for(;;) {
+        loadUsers(officials, admins, clients);
+        cout << "##############" << endl;
+        cout << " BEAR BANK LOGIN " << endl;
+        cout << " [1] LOGIN " << endl;
+        cout << " [2] CREATE AN ACCOUNT " << endl;
+        cout << " [3] EXIT " << endl;
+        cout << "##############" << endl;
+        
+        string buffer;
+        getline(cin, buffer);
+        int userSelection = stoi(buffer);
 
-	//currentAccountHolder = hol;
+        switch(userSelection) {
+            case 1: { // LOGIN
+                cout << "##############" << endl;
+                cout << " [1] CUSTOMER LOGIN" << endl;
+                cout << " [2] EMPLOYEE LOGIN " << endl;
+                cout << " [3] EXIT " << endl;
+                cout << "##############" << endl;
+                buffer = "";
+                getline(cin, buffer);
+                userSelection = stoi(buffer);
 
-	do{
 
-		try
-		{
-			cout << "######################" << endl;
-			cout << "Welcome to Bear Bank" << endl;
-			cout << "[1] Login" << endl;
-			cout << "[2] Exit" << endl;
-			cout << "######################" << endl;
+                if(userSelection == 1) {
+                cout << "##############" << endl;
+                cout << " PLEASE ENTER YOUR CREDINTENALS " << endl;
+                cout << "##############" << endl;
+                cout << "Username: ";
+                string username;
+                getline(cin, username);
+                cout << "Password: ";
+                string password;
+                getline(cin, password);
+                validateLogin(username, password, userSelection, officials, admins, clients);
+                }
+                if(userSelection == 2) {
+                    cout << "##############" << endl;
+                    cout << " [1] BANK OFFICIAL" << endl;
+                    cout << " [2] SYSTEM ADMIN" << endl;
+                    cout << " [3] RETURN TO MAIN MENU " << endl;
+                    cout << "##############" << endl;
+                    buffer;
+                    getline(cin, buffer);
+                    userSelection = stoi(buffer);
+                    if(userSelection == 3) {
+                        main();
+                    }
+                    cout << "##############" << endl;
+                    cout << " PLEASE ENTER YOUR CREDINTENALS " << endl;
+                    cout << "##############" << endl;
+                    cout << "Username: ";
+                    string username;
+                    getline(cin, username);
+                    cout << "Password: ";
+                    string password;
+                    getline(cin, password);
+                    if(userSelection == 1) {
+                        userSelection = 2;
+                        validateLogin(username, password, userSelection, officials, admins, clients);
+                    }else if(userSelection == 2) {
+                        userSelection = 3;
+                        validateLogin(username, password, userSelection, officials, admins, clients);
+                    }
+                } else if(userSelection == 3){
+                    exit(1);
+                }else {
+                    cout << "##############" << endl;
+                    cout << "Incorrect Input... Returning to main menu" << endl;
+                    cout << "##############" << endl;
+                }
+            }
+            case 2: {
+                cout << "########" << endl;
+                cout << "CHANGE THIS LATER..." << endl;
 
-			cin >> userSelection;
-			if ((!cin) || (userSelection < 0) || (userSelection > 2))
-			{
-				throw userSelection;
-			}
+            }
+            case 3: { // exit condition
+                cout << " GOODBYE " << endl;
+                cout << "##############" << endl;
+                // saveAccounts();
+                exit(1);
+            }
+        }
+        
+    }
+}
+// load in the users into the program
+void loadUsers(vector<official> &officials, vector<admin> &admins, vector<accountHolder> &clients) {
+    
+ 
+    string path = "Data/";
+    vector<string> accountIDs; // USE A BST HERE!!!
+    for(const auto & entry : fs::directory_iterator(path)) {
+        string temp = entry.path().string();
+        temp = temp.substr(5,8);
+        accountIDs.push_back(temp);
+    }
+    for(int i = 0; i < accountIDs.size(); i++) {
+        string accountID = accountIDs[i];
+        if(accountID[0] == 'S') {
+            // get the file 
+            // create an admin 
+            // push admin
+            ifstream inFile;
+            inFile.open("Data/"+accountID+".txt");
+            string text;
+            string log;
+            vector<string> temp;
+            while(getline(inFile, text)) {
+                if(text[0] != '@') {   
+                    temp.push_back(text); 
+                } else {
+                    log = text + log;
+                }
+            }
+            string username = temp[1];
+            string password = temp[2];
+            string lastLogin = temp [3]; 
+            string status = temp [4];
+            if(status.length() < 5) {
+                status = "Active";
+            }
+            admin tempAdmin(accountID, username, password, lastLogin, status, log);
+            admins.push_back(tempAdmin);
+            
+        } else if (accountID[0] == 'O') {
+            ifstream inFile;
+            inFile.open("Data/"+accountID+".txt");
+            string text;
+            string log;
+            vector<string> temp;
+            while(getline(inFile, text)) {
+                if(text[0] != '@') {   
+                    temp.push_back(text); 
+                } else {
+                    log = text + log;
+                }
+            }
+            string username = temp[1];
+            string password = temp[2];
+            string lastLogin = temp[3]; 
+            string status = temp[4];
 
-			switch (userSelection) 
-			{
-				case 1:
-				{
-					try
-					{
-					int userSelection2 = 0;
-					cout << "######################" << endl;
-					cout << "Welcome to Bear Bank" << endl;
-					cout << "[1] AccountHolder" << endl;
-					cout << "[2] BankOfficial" << endl;
-					cout << "[3] Admin" << endl;
-					cout << "######################" << endl;
-					cin >> userSelection2;
+            if(status.length() < 5) {
+                status = "Active";
+            }
+            
+            official tempOfficial(accountID, username, password, lastLogin, status, log);
+            officials.push_back(tempOfficial);
+            
+            
+        } else if (accountID[0] == 'A') {
+            ifstream inFile;
+            inFile.open("Data/"+accountID+".txt");
+            string text;
+            string log;
+            vector<string> temp;
+            while(getline(inFile, text)) {
+                if(text[0] != '@') {   
+                    temp.push_back(text); 
+                } else {
+                    log = text + log;
+                }
+            }
 
-					if ((!cin) || (userSelection2 < 0) || (userSelection2 > 3))
-					{
-						throw userSelection2;
-					}
+            string username = temp[1];
+            string password = temp[2];
+            string lastLogin = temp[3]; 
+            string status = temp[4];
+            if(status.length() < 5) {
+                status = "Active";
+            }
+            string firstName = temp[5];
+            string lastName = temp[6];
+            string phoneNumber = temp[7];
+            string address = temp[8];
+            vector<string> accounts;
+            
+            string tempString;
+            stringstream ss(temp[9]);
+    
+            while(getline(ss, tempString, ' ')) {
+                accounts.push_back(tempString);
+            }
 
-					switch (userSelection2) 
-					{
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-//                           ACCOUNT HOLDER
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-						case 1:
-						{
-							string input;
-							bool ifFound = false;
-							cout<< "Enter Account UserName"<< endl;
-							cin>>input;
-							for (int a= 0; a<accountHolderVector.size(); a+=1)
-							{
-								if (accountHolderVector[a]->getUsername() == input);
-								{
-									ifFound = true;
-									currentAccountHolder = accountHolderVector[a];
-								}
-							}
+            accountHolder tempAccount(accountID, username, password, lastLogin, status, firstName, lastName, phoneNumber, address, accounts, log);
+            clients.push_back(tempAccount);
+        }
+    }
 
-							if (ifFound == true)
-							{
-								cout<<"Enter Account Password"<<endl;
-								cin>>input;
-								if (currentAccountHolder->getPassword() == input)
-								{
-									cout<<" SUCCESFUL LOGIN"<<endl;
-									int accountHolderSelection = 0;
-									do
-									{	
-									try
-									{
-										cout << "######################" << endl;
-										cout << "[1] Change Password" << endl;
-										cout << "[2] View Accounts Information" << endl;
-										cout << "[3] View Account Transaction History" << endl;
-										cout << "[4] logout" << endl;
-										cout << "######################" << endl;
+    
 
-										cin >> accountHolderSelection;
-										if ((!cin) || (accountHolderSelection < 0) || (accountHolderSelection > 4))
-										{
-											throw accountHolderSelection;
-										}
-										switch(accountHolderSelection)
-										{
-											case 1:
-											{
-												string input;
-												cout<<"Please Enter New Password"<<endl;
-												cin>>input;
-												currentAccountHolder->setPassword(input);
-												cout<<"Password Has Been Set Too : "<<currentAccountHolder->getPassword()<<endl;;
-												break;
-											}
-											case 2:
-											{
-//veiw account Information
-											}
-
-											case 3:
-											{
-//veiw account transaction
-											}
-										}
-									}
-									catch(int)
-									{
-										cout << "Invalid input... Restarting" << endl;
-										cin.clear();
-										cin.ignore();
-									}
-									}	while (accountHolderSelection != 4 );
-								}
-
-								else
-								{
-									cout<<"INVALID PASSWORD"<<endl;
-								}
-							}
-
-							else
-							{
-								cout<< "INVALID USERNAME"<<endl;
-							}
-							break;
-
-						}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//              BANK OFFICIALS
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-						case 2:
-						{
-							string input;
-							bool ifFound = false;
-							cout<< "Enter Account UserName"<< endl;
-							cin>>input;
-							for (int a= 0; a<bankOfficialVector.size(); a+=1)
-							{
-
-								if (bankOfficialVector[a]->getUsername() == input)
-								{
-									ifFound = true;
-									currentBankOfficial = bankOfficialVector[a];
-								}
-							}
-
-							if (ifFound == true)
-							{
-								cout<<"Enter Account Password"<<endl;
-								cin>>input;
-								if (currentBankOfficial->getPassword() == input)
-								{
-									cout<<" SUCCESFUL LOGIN"<<endl;
-									int bankOfficialSelection = 0;
-									do
-									{	
-									try
-									{
-										cout << "######################" << endl;
-										cout << "[1] open BankAccount" << endl;
-										cout << "[2] close BankAccount" << endl;
-										cout << "[3] deposit" << endl;
-										cout << "[4] withdraw" << endl;
-										cout << "[5] Search for account" << endl;
-										cout << "[6] logout" << endl;
-										cout << "######################" << endl;
-
-										cin >> bankOfficialSelection;
-										if ((!cin) || (bankOfficialSelection < 0) || (bankOfficialSelection > 6))
-										{
-											throw bankOfficialSelection;
-										}
-										switch(bankOfficialSelection)
-										{
-											case 1:
-											{
-												AccountHolder* newUser = currentBankOfficial->openAccount();
-												accountHolderVector.emplace_back(newUser);
-												break;
-											}
-											case 2:
-											{
-//close bank account
-											}
-
-											case 3:
-											{
-												string input;
-												bool ifFound = false;
-												cout<< "Enter Account Of Deposit UserName"<< endl;
-												cin>>input;
-												for (int a= 0; a<accountHolderVector.size(); a+=1)
-												{
-
-													if (accountHolderVector[a]->getUsername() == input)
-													{
-														ifFound = true;
-														currentAccountHolder = accountHolderVector[a];
-													}	
-												}
-												if (ifFound == true)
-												{
-													cout<<"Enter Account Password"<<endl;
-													cin>>input;
-													if (currentBankOfficial->getPassword() == input)
-													{
-														cout<<"Account SUCCESFULLY LOGGED-IN"<<endl;
-// deposite stuff
-// currentAccountHolder set to person who wants to make deposit
-// still need the specific account of that user to make transactio in
-
-													}
-													else
-													{
-														cout<<"INVALID PASSWORD"<<endl;
-													}
-												}
-												else
-												{
-													cout<< "INVALID USERNAME"<<endl;
-												}
-												break;
-											}
-
-											case 4:
-											{
-												string input;
-												bool ifFound = false;
-												cout<< "Enter Account Of Withdraw UserName"<< endl;
-												cin>>input;
-												for (int a= 0; a<accountHolderVector.size(); a+=1)
-												{
-
-													if (accountHolderVector[a]->getUsername() == input)
-													{
-														ifFound = true;
-														currentAccountHolder = accountHolderVector[a];
-													}	
-												}
-												if (ifFound == true)
-												{
-													cout<<"Enter Account Password"<<endl;
-													cin>>input;
-													if (currentBankOfficial->getPassword() == input)
-													{
-														cout<<"Account SUCCESFULLY LOGGED-IN"<<endl;
-// Withdraw stuff 
-// currentAccountHolder set to person who wants to make withdraw
-// still need the specific account of that user to make transaction in
-
-													}
-													else
-													{
-														cout<<"INVALID PASSWORD"<<endl;
-													}
-												}
-												else
-												{
-													cout<< "INVALID USERNAME"<<endl;
-												}
-												break;
-											}
-
-											case 5:
-											{
-
-//search for account
-// maybe another jump meanu with search by;
-// phonenumber, username, address, name...
-
-											}
-										}
-									}
-									catch(int)
-									{
-										cout << "Invalid input... Restarting" << endl;
-										cin.clear();
-										cin.ignore();
-									}
-									}	while (bankOfficialSelection != 6);
-
-								}
-								else
-								{
-									cout<<"INVALID PASSWORD"<<endl;
-								}
-							}
-							else
-							{
-								cout<< "INVALID USERNAME"<<endl;
-							}
-							break;
-						}
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//                  SYSTEM ADMIN
-///////////////////////////////////////////////////////////////////////////////////////////////////
-						case 3:
-						{
-							string input;
-							bool ifFound = false;
-							cout<< "Enter Account UserName"<< endl;
-							cin>>input;
-							for (int a= 0; a<systemAdminVector.size(); a+=1)
-							{
-
-								if (systemAdminVector[a]->getUsername() == input)
-								{
-									ifFound = true;
-									currentAdministrator = systemAdminVector[a];
-								}
-							}
-
-							if (ifFound == true)
-							{
-								cout<<"Enter Account Password"<<endl;
-								cin>>input;
-								if (currentAdministrator->getPassword() == input)
-								{
-									cout<<" SUCCESFUL LOGIN"<<endl;
-									int administratorSelection = 0;
-									do
-									{	
-									try
-									{
-										cout << "######################" << endl;
-										cout << "[1] Create Bank Official" << endl;
-										cout << "[2] Disable Bank Official" << endl;
-										cout << "[3] Modiffy Bank Account types" << endl;
-										cout << "[4] Reteive User login ID" << endl;
-										cout << "[5] Change User Password" << endl;
-										cout << "[6] Logout" << endl;
-										cout << "######################" << endl;
-
-										cin >> administratorSelection;
-										if ((!cin) || (administratorSelection < 0) || (administratorSelection > 6))
-										{
-											throw administratorSelection;
-										}
-										switch(administratorSelection)
-										{
-											case 1:
-											{
-												BankOfficial* newOfficial  = new BankOfficial;
-												bankOfficialVector.emplace_back(newOfficial);
-												break;
-											}
-											case 2:
-											{
-//disable BankOfficial
-											}
-
-											case 3:
-											{
-//modify bank Account types
-											}
-
-											case 4:
-											{
-												cout<< "Enter First Name Account Is Held Under"<<endl;
-// retreive user login ID
-											}
-
-											case 5:
-											{
-//chnage user password
-											}
-										}
-									}
-									catch(int)
-									{
-										cout << "Invalid input... Restarting" << endl;
-										cin.clear();
-										cin.ignore();
-									}
-									}	while (administratorSelection != 6);
-
-								}
-								else
-							{
-								cout<< "INVALID PASSWORD"<<endl;
-							}
-							}
-							else
-							{
-								cout<< "INVALID USERNAME"<<endl;
-							}
-							break;
-						}
-					}
-					}
-						catch(int)
-						{
-							cout << "Invalid input... Restarting" << endl;
-							cin.clear();
-							cin.ignore();
-						}
-
-					break;
-				}
-				/*case 2:
-				{
-					if (currentBankOfficial != nullptr)
-					{
-						accountHolderVector.emplace_back(currentBankOfficial->openAccount());
-					}
-					else
-					{
-						cout<< " A Bank Official must be logged in to Open a new Account"<<endl;
-					}
-					break;
-				}*/
-			}
-		}
-		catch(int)
-		{
-			cout << "Invalid input... Restarting" << endl;
-			cin.clear();
-			cin.ignore();
-		}
-
-	} while (userSelection != 2);
-
-	cout << "Goodbye!" << endl;
-;
-	return 0;
 }
 
+bool validateLogin(string username, string password, int accType, vector<official> &officials, vector<admin> &admins, vector<accountHolder> &clients) {
+    loadUsers(officials,admins,clients);
+    if(accType == 1) { // CUSTOMER
+        for(int i = 0; i < clients.size(); i++) {
+            if(clients[i].getUserName() == username && clients[i].getPassword() == password) {
+                time_t now = time(0);
+                char* date_time = ctime(&now);
+                string date(date_time);
+                clients[i].setLastLogin(date.substr(0,date.length()));
+                clients[i].saveClient();
+                clientMenu(clients[i], officials, admins, clients);
+            }
+
+        }
+    }
+    if(accType == 2) { // OFFICIAL
+       for(int i = 0; i < admins.size(); i++) {
+            if(officials[i].getUserName() == username && officials[i].getPassword() == password) {
+                time_t now = time(0);
+                char* date_time = ctime(&now);
+                string date(date_time);
+                officials[i].setLastLogin(date.substr(0,date.length()));
+                officials[i].saveOfficial();
+                officialMenu(officials[i], officials, admins, clients);
+            }
+            
+        }     
+    }
+    if(accType == 3) {
+        for(int i = 0; i < admins.size(); i++) {
+            if(admins[i].getUserName() == username && admins[i].getPassword() == password) {
+                time_t now = time(0);
+                char* date_time = ctime(&now);
+                string date(date_time);
+                admins[i].setLastLogin(date.substr(0,date.length()));
+                admins[i].saveAdmin();
+                adminMenu(admins[i], officials, admins, clients);
+            }
+            
+        }
+        
+    }
+     do{
+        cout << "##############" << endl;
+        cout << " INCORRECT CREDINTIALS " << endl;
+        cout << "##############" << endl;
+        cout << "[1] Retry Login" << endl;
+        cout << "[2] Return to Main Menu" << endl;
+        cout << "##############" << endl;
+        string buffer = "";
+        getline(cin, buffer);
+        int userSelection = stoi(buffer);
+        if(userSelection == 1) {
+            retryLogin(accType, officials, admins, clients);
+        }else{ // error
+            main();
+        }
+     }while(validateLogin(username,password, accType, officials, admins, clients) == false);   
+}
+
+void retryLogin(int accType, vector<official> &officials, vector<admin> &admins, vector<accountHolder> &clients) {
+    cout << "##############" << endl;
+    cout << " PLEASE ENTER YOUR CREDINTENALS " << endl;
+    cout << "##############" << endl;
+    cout << "Username: ";
+    string username;
+    getline(cin, username);
+    cout << "Password: ";
+    string password;
+    getline(cin, password);
+    validateLogin(username, password, accType, officials, admins, clients);
+}

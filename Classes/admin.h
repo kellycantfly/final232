@@ -1,3 +1,5 @@
+#ifndef ADMIN_H
+#define ADMIN_H
 #include "user.h"
 #include <iostream>
 #include <string>
@@ -11,18 +13,27 @@ class admin : public User {
             password = pass;
             lastLogin = last;
             status = stat;
-            Log = activity;
+            log = activity;
         }
-        
-        void openOfficialAccount() {
-
+        void deleteAccount() {
+                string filePath = "Data/" + userID + ".txt";
+                if(remove(filePath.c_str()) != 0) {
+                    cout << "The account has been deleted." << endl;
+                }
+              // rememmber to delete the checking accounts and such here too  
         }
-        void disableOfficialAccount(string ID) {
-            
+        void saveAdmin() {
+            ofstream outFile;
+            outFile.open("Data/"+userID + ".txt");
+            outFile << userID << endl;
+            outFile << username << endl;
+            outFile << password << endl;
+            outFile << lastLogin;
+            outFile << status << endl;
+            outFile << log << endl;
         }
-        void findPassword(string ID) {
-
-        }
+       
 
        
 };
+#endif

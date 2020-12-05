@@ -1,0 +1,11 @@
+A1234567
+AccountHolder
+Password
+Sat Dec 05 15:11:00 2020
+Active
+David
+Harper
+6362206439
+1021 Harrison Street
+C1234567 
+@:
