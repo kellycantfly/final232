@@ -7,26 +7,31 @@ using namespace std;
 
 int main()
 {
+
+	ofstream outFile;
+
+	outFile.open("account.txt");
+
 	int userSelection = 0; // for intial menu
-	//BankOfficial* off = new BankOfficial; // initial BankOfficial object
-	//AccountHolder* hol = new AccountHolder; // initial AccountHolder object
-	SystemAdmin* admin = new SystemAdmin; // initial SystemAdmin object
+	BankOfficial* off = new BankOfficial; // initial BankOfficial object
+	AccountHolder* hol = new AccountHolder; // initial AccountHolder object
+	//SystemAdmin* admin = new SystemAdmin; // initial SystemAdmin object
 
 	vector<AccountHolder*> accountHolderVector; // holds AccountHolders
 	vector<BankOfficial*> bankOfficialVector; // holds BankOfficials
 	vector<SystemAdmin*> systemAdminVector; // holds SystemAdmins
 
 	// initial adds to subclass vectors
-	//bankOfficialVector.emplace_back(off);
-	//accountHolderVector.emplace_back(hol);
-	systemAdminVector.emplace_back(admin);
+	bankOfficialVector.emplace_back(off);
+	accountHolderVector.emplace_back(hol);
+	//systemAdminVector.emplace_back(admin);
 
-	AccountHolder* currentAccountHolder = nullptr; // AccountHolder is currently logged out
-	BankOfficial* currentBankOfficial = nullptr; // off is logged in. could be changed
+	AccountHolder* currentAccountHolder = hol; // AccountHolder is currently logged out
+	BankOfficial* currentBankOfficial = off; // off is logged in. could be changed
 	SystemAdmin* currentSystemAdmin = nullptr; // admin is logged in. could be changed
 
 
-	do{
+	do {
 
 		try
 		{
@@ -37,7 +42,8 @@ int main()
 			cout << "[2] Open a Bank Account" << endl;
 			cout << "[3] Create a User Account" << endl;
 			cout << "[4] Logout" << endl;
-			cout << "[5] Exit" << endl;
+			cout << "[5] Close Account" << endl;
+			cout << "[6] Exit" << endl;
 			cout << "######################" << endl;
 
 			cin >> userSelection;
@@ -47,7 +53,7 @@ int main()
 				throw userSelection; // jumps to error handling menu
 			}
 
-			switch (userSelection) 
+			switch (userSelection)
 			{
 				case 1: // Login
 				{
@@ -112,42 +118,21 @@ int main()
 						}
 					}
 
-					// USER MENU
-					if (userSelection2 != 0)
-					{
-						switch (userSelection2)
-						{
-							case 1: // Bank Official
-							{
-								cout << "BANK OFFICIAL MENU: \n";
-								break;
-							}
-							case 2: // Admin
-							{
-								cout << "SYSTEM ADMIN MENU: \n";
-								break;
-							}
-							case 3: // Holder
-							{
-								cout << "ACCOUNT HOLDER MENU: \n";
-								break;
-							}
-						}
-					}
-					else
-					{
-						throw userSelection2;
-					}
-
-
 					break;
-				}
+				} // ***END CASE 1***
 				case 2: // Open a Bank Account
 				{
 					if (currentAccountHolder != NULL) // checks an AccountHolder is logged in
 					{
-						// logged in BankOfficial opens an account for logged in AccountHolder
-						currentBankOfficial->openAccount(currentAccountHolder);
+						if (currentBankOfficial != NULL)
+						{
+							// logged in BankOfficial opens an account for logged in AccountHolder
+							currentBankOfficial->openAccount(currentAccountHolder);
+						}
+						else
+						{
+							cout << "Please log in a valid Bank Official\n";
+						}
 					}
 					else
 					{
@@ -156,7 +141,7 @@ int main()
 					}
 
 					break;
-				}
+				}// ***END CASE 2***
 				case 3: // Create a User Account
 				{
 					if (currentSystemAdmin != NULL)
@@ -174,21 +159,21 @@ int main()
 							{
 								switch (type)
 								{
-									case 'A': // SystemAdmin
-									{
-										systemAdminVector.push_back(currentSystemAdmin->createAdmin());
-										break;
-									}
-									case 'O': // BankOfficial
-									{
-										bankOfficialVector.push_back(currentSystemAdmin->createOffical());
-										break;
-									}
-									case 'H': // AccountHolder
-									{
-										accountHolderVector.push_back(currentSystemAdmin->createHolder());
-										break;
-									}
+								case 'A': // SystemAdmin
+								{
+									systemAdminVector.push_back(currentSystemAdmin->createAdmin());
+									break;
+								}
+								case 'O': // BankOfficial
+								{
+									bankOfficialVector.push_back(currentSystemAdmin->createOffical());
+									break;
+								}
+								case 'H': // AccountHolder
+								{
+									accountHolderVector.push_back(currentSystemAdmin->createHolder());
+									break;
+								}
 								}
 							}
 						}
@@ -205,7 +190,7 @@ int main()
 					}
 
 					break;
-				}
+				}// ***END CASE 3***
 				case 4: // Logout
 				{
 					currentAccountHolder = NULL;
@@ -215,22 +200,46 @@ int main()
 					cin.clear();
 					cin.ignore();
 					break;
+				}// ***END CASE 4***
+				case 5: // Close Account
+				{
+					if (currentAccountHolder != NULL) // checks an AccountHolder is logged in
+					{
+						if (currentBankOfficial != NULL)
+						{
+							// logged in BankOfficial opens an account for logged in AccountHolder
+							currentBankOfficial->closeAccount(currentAccountHolder, outFile);
+						}
+						else
+						{
+							cout << "Please log in a valid Bank Official\n";
+						}
+					}
+					else
+					{
+						cout << "Please log in a valid Account Holder\n";
+
+					}
+					break;
 				}
-			}
-		}
-		catch(int) // error handling menu
+			}// ***END SWITCH STATEMENT***
+		} // ***END MENU***
+		catch (int) // error handling menu
 		{
 			cout << "Invalid input... Restarting" << endl;
 			cin.clear();
 			cin.ignore();
 		}
 
-	} while (userSelection != 5); // an input of 5 will close the program
+	} while (userSelection != 6); // an input of 5 will close the program
+
+
+
 
 	cout << "SystemAdmins: \n";
 	for (int i = 0; i < systemAdminVector.size(); i++)
 	{
-		cout <<systemAdminVector[i]->getUsername() << endl;
+		cout << systemAdminVector[i]->getUsername() << endl;
 	}
 
 	cout << "BankOfficials: \n";

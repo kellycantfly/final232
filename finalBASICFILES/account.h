@@ -2,7 +2,7 @@
 #define ACCOUNT_H
 #include "bankaccount.h"
 #include <string>
-#include <vector>
+#include <fstream>
 #include <iostream>
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
@@ -19,8 +19,6 @@ class Account {
         string firstName;
         string lastName;
 
-        bool status; // 0 is closed, 1 is open
-
         friend class BankOfficial;
         friend class SystemAdmin;
 
@@ -30,9 +28,8 @@ class Account {
         Account()
         {
             setAccountID(to_string(counter));
-            status = 1; // account is open
-            setfirstName("Kelly");
-            setlastName("Christensen");
+            setfirstName("");
+            setlastName("");
         }
 
         // SETTERS
@@ -167,84 +164,164 @@ class BankOfficial : public Account {
             setlastName(last);
         }
 
+        void closeAccount(AccountHolder* holder, ofstream& outFile)
+        {
+            char type;
+            time_t now = time(0);
+            cout << "[C]hecking, [S]aving, C[D]" << endl;
+            try
+            {
+                cin >> type; // prompts user input. Must be the capital letter
+                if ((!cin) && (type != 'C') && (type != 'S') && (type != 'D'))
+                {
+                    throw type; // jumps to error handling menu
+                }
+                else
+                {
+                    switch (type)
+                    {
+                        case 'C': // CheckingAccount
+                        {
+                            if (holder->getChecking() != NULL)
+                            {
+                                holder->getChecking()->setDateClose(ctime(&now));
+                                outFile << holder->getChecking()->getAccID() << " "
+                                    << holder->getAccountID() << " "
+                                    << holder->getUsername() << " "
+                                    << holder->getfirstName() << " "
+                                    << holder->getlastName() << " "
+                                    << holder->getAddress() << " "
+                                    << holder->getChecking()->getDateOpen() << " "
+                                    << holder->getChecking()->getDateClose() << endl;
+                                holder->getChecking()->setStatus(0);
+                                holder->setChecking(NULL);
+                                cout << "Checking account closed\n";
+                            }
+                            else
+                                cout << "User has no checking account\n";
+
+                            break;
+                        }
+                        case 'S': // SavingAccount
+                        {
+                            if (holder->getSaving() != NULL)
+                            {
+                                holder->getSaving()->setDateClose(ctime(&now));
+                                outFile << holder->getSaving()->getAccID() << " "
+                                    << holder->getAccountID() << " "
+                                    << holder->getUsername() << " "
+                                    << holder->getfirstName() << " "
+                                    << holder->getlastName() << " "
+                                    << holder->getAddress() << " "
+                                    << holder->getSaving()->getDateOpen() << " "
+                                    << holder->getSaving()->getDateClose() << endl;
+                                holder->getSaving()->setStatus(0);
+                                holder->setSaving(NULL);
+                                cout << "Saving account closed\n";
+                            }
+                            else
+                                cout << "User has no saving account\n";
+                            break;
+                        }
+                        case 'D': // CDAccount
+                        {
+                            if (holder->getCD() != NULL)
+                            {
+                                holder->getCD()->setDateClose(ctime(&now));
+                                outFile << holder->getCD()->getAccID() << " "
+                                    << holder->getAccountID() << " "
+                                    << holder->getUsername() << " "
+                                    << holder->getfirstName() << " "
+                                    << holder->getlastName() << " "
+                                    << holder->getAddress() << " "
+                                    << holder->getCD()->getDateOpen() << " "
+                                    << holder->getCD()->getDateClose() << endl;
+                                holder->getCD()->setStatus(0);
+                                holder->setCD(NULL);
+                                cout << "CD account closed\n";
+                            }
+                            else
+                                cout << "User has no CD account\n";
+                            break;
+                        }
+                    }
+                }
+
+            }
+            catch (char) // error handling menu
+            {
+                cout << "Invalid bank account type" << endl;
+                cin.clear();
+                cin.ignore();
+            }
+        }
+
         // openAccount allows a BankOfficial to take an AccountHolder parameter, create a new BankAccount, and assign
         // it to that AccountHolder's pointer members depending on the type
         BankAccount* openAccount(AccountHolder* holder) {
             cout << "New bank account menu" << endl;
-            if (validateLogin()) // checks BankOfficial is logged in
+            char type;
+            cout << "[C]hecking, [S]aving, C[D]" << endl;
+            try
             {
-                char type;
-                cout << "[C]hecking, [S]aving, C[D]" << endl;
-                try
+                cin >> type; // prompts user input. Must be the capital letter
+                if ((!cin) && (type != 'C') && (type != 'S') && (type != 'D'))
                 {
-                  cin >> type; // prompts user input. Must be the capital letter
-                  if ((!cin) && (type != 'C') && (type != 'S') && (type != 'D'))
-                  {
-                      throw type; // jumps to error handling menu
-                  }
-                  else
-                  {
-                      switch (type)
-                      {
-                          case 'C': // CheckingAccount
-                          {
-                              if (holder->getChecking() == NULL) // checks for existing CheckingAccount
-                              {
-                                  CheckingAccount* newChecking = new CheckingAccount(holder->getAccountID()); // makes a new CheckingAccount
-                                  holder->setChecking(newChecking); // assigns the AccountHolder this CheckingAccount
-                                  holder->check->print(); // test print to check userID matches accountID
-                                  return newChecking;
-                              }
-                              else
-                                  cout << "User already has a checking account\n";
-                              break;
-                          }
-                          case 'S': // SavingAccount
-                          {
-                              if (holder->getSaving() == NULL) // checks for existing SavingAccount
-                              {
-                                  SavingAccount* newSaving = new SavingAccount(holder->getAccountID());
-                                  holder->setSaving(newSaving);
-                                  holder->save->print(); // test print
-                                  return newSaving;
-                              }
-                              else
-                                  cout << "User already has a saving account\n";
-                              break;
-                          }
-                          case 'D': // CDAccount
-                          {
-                              if (holder->getCD() == NULL) // checks for existing CDAccount
-                              {
-                                  CDAccount* newCD = new CDAccount(holder->getAccountID());
-                                  holder->setCD(newCD);
-                                  holder->CD->print(); // test print
-                                  return newCD;
-                              }
-                              else
-                                  cout << "User already has a CD account\n";
-                              break;
-                          }
-                      }
-                  }
+                    throw type; // jumps to error handling menu
                 }
-                catch (char) // error handling menu
+                else
                 {
-                    cout << "Invalid bank account type" << endl;
-                    cin.clear();
-                    cin.ignore();
+                    switch (type)
+                    {
+                    case 'C': // CheckingAccount
+                    {
+                        if (holder->getChecking() == NULL) // checks for existing CheckingAccount
+                        {
+                            CheckingAccount* newChecking = new CheckingAccount(holder->getAccountID()); // makes a new CheckingAccount
+                            holder->setChecking(newChecking); // assigns the AccountHolder this CheckingAccount
+                            holder->check->print(); // test print to check userID matches accountID
+                            return newChecking;
+                        }
+                        else
+                            cout << "User already has a checking account\n";
+                        break;
+                    }
+                    case 'S': // SavingAccount
+                    {
+                        if (holder->getSaving() == NULL) // checks for existing SavingAccount
+                        {
+                            SavingAccount* newSaving = new SavingAccount(holder->getAccountID());
+                            holder->setSaving(newSaving);
+                            holder->save->print(); // test print
+                            return newSaving;
+                        }
+                        else
+                            cout << "User already has a saving account\n";
+                        break;
+                    }
+                    case 'D': // CDAccount
+                    {
+                        if (holder->getCD() == NULL) // checks for existing CDAccount
+                        {
+                            CDAccount* newCD = new CDAccount(holder->getAccountID());
+                            holder->setCD(newCD);
+                            holder->CD->print(); // test print
+                            return newCD;
+                        }
+                        else
+                            cout << "User already has a CD account\n";
+                        break;
+                    }
+                    }
                 }
             }
-            else
+            catch (char) // error handling menu
             {
-                cout << "Invalid credentials for opening bank account" << endl; // BankOfficial must be logged in
+                cout << "Invalid bank account type" << endl;
+                cin.clear();
+                cin.ignore();
             }
             return NULL;
-        }
-
-        // TO DO
-        void closeAccount() {
-
         }
 
         // TO DO
