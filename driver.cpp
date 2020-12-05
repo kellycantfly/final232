@@ -97,7 +97,10 @@ int main () {
             }
             case 2: {
                 cout << "########" << endl;
-                cout << "CHANGE THIS LATER..." << endl;
+                cout << "You must go see a bank official to open an account." << endl;
+                cout << "[Enter] Return to Main Menu" << endl;
+                string buffer;
+                getline(cin,buffer);
 
             }
             case 3: { // exit condition
