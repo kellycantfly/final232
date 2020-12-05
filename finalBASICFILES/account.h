@@ -4,9 +4,10 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
 using namespace std;
 
-static int counter = 0; // FIX. Doesn't always give a unique accountID
 
 class Account {
     private:
@@ -24,12 +25,14 @@ class Account {
         friend class SystemAdmin;
 
     public:
-        int counter;
+        int counter = rand() % 500 + 1;
 
         Account()
         {
-            counter++; // counter increases for unique accountID
+            setAccountID(to_string(counter));
             status = 1; // account is open
+            setfirstName("Kelly");
+            setlastName("Christensen");
         }
 
         // SETTERS
@@ -103,7 +106,6 @@ class AccountHolder : public Account {
             cin >> pass;
             setPassword(pass);
 
-            counter++; // counter increases for unique accountID
             setAccountID(to_string(counter));
             cout << getUsername() <<" "<< getAccountID() << endl; // displays new account to user
         }
@@ -150,7 +152,6 @@ class BankOfficial : public Account {
             cin >> pass;
             setPassword(pass);
 
-            counter++; // counter increases for unique accountID
             setAccountID(to_string(counter));
 
             cout << getUsername() << " " << getAccountID() << endl; // displays new account to user
@@ -294,7 +295,6 @@ class SystemAdmin : public Account {
             cin >> pass;
             setPassword(pass);
 
-            counter++; // counter increases for unique accountID
             setAccountID(to_string(counter));
             cout << getUsername() << " " << getAccountID() << endl;
         }
@@ -338,57 +338,22 @@ class SystemAdmin : public Account {
 
         }
 
-        // createUser returns an Account depending on the user input
-        Account* createUser() {
-            cout << "New user account menu" << endl;
-            if (validateLogin())
-            {
-                char type;
-                cout << "[A]dmin, [O]fficial, [H]older" << endl;
-                try
-                {
-                    cin >> type;
-                    if ((!cin) && (type != 'A') && (type != 'O') && (type != 'H'))
-                    {
-                        throw type; // jumps to error handling menu
-                    }
-                    else
-                    {
-                        switch (type)
-                        {
-                            case 'A': // SystemAdmin
-                            {
-                                SystemAdmin* newAdmin = new SystemAdmin;
-                                return newAdmin;
-                                break;
-                            }
-                            case 'O': // BankOfficial
-                            {
-                                BankOfficial* newOfficial = new BankOfficial;
-                                return newOfficial;
-                                break;
-                            }
-                            case 'H': // AccountHolder
-                            {
-                                AccountHolder* newHolder = new AccountHolder;
-                                return newHolder;
-                                break;
-                            }
-                        }
-                    }
-                }
-                catch (char) // error handling menu
-                {
-                    cout << "Invalid user account type" << endl;
-                    cin.clear();
-                    cin.ignore();
-                }
-            }
-            else
-            {
-                cout << "Invalid credentials for creating user account" << endl;
-            }
-            return NULL; // NULL if account creation fails
+        SystemAdmin* createAdmin()
+        {
+            SystemAdmin* newAdmin = new SystemAdmin;
+            return newAdmin;
+        }
+
+        BankOfficial* createOffical()
+        {
+            BankOfficial* newOfficial = new BankOfficial;
+            return newOfficial;
+        }
+
+        AccountHolder* createHolder()
+        {
+            AccountHolder* newHolder = new AccountHolder;
+            return newHolder;
         }
 };
 
