@@ -72,7 +72,6 @@ int main () {
                     cout << " [2] SYSTEM ADMIN" << endl;
                     cout << " [3] RETURN TO MAIN MENU " << endl;
                     cout << "##############" << endl;
-                    buffer;
                     getline(cin, buffer);
                     userSelection = stoi(buffer);
                     if(userSelection == 3) {
