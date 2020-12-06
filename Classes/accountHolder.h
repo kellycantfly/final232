@@ -89,6 +89,9 @@ class accountHolder : public User {
         void enableAccount() {
             status = "Active";
         }
+        void setStatus(string stat) {
+            status = stat;
+        }
        
 
 
