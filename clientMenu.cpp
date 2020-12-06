@@ -15,6 +15,11 @@ void clientMenu(accountHolder currentUser, vector<official> &officials, vector<a
     cout << "CLIENT MENU " << endl;
     cout << "Welcome back, " + currentUser.getFirstName() + " " + currentUser.getLastName() << endl;
     cout << "Last logged in at: " << currentUser.getLastLogin();
+    time_t now = time(0);
+    char* date_time = ctime(&now);
+    string date(date_time);
+    currentUser.setLastLogin(date.substr(0,date.length()));
+    currentUser.saveClient();
     cout << "Current Accounts: " << endl;
     vector<string> accounts = currentUser.getAccounts();
     for(int i = 0; i < accounts.size(); i++) {
@@ -115,7 +120,7 @@ void clientMenu(accountHolder currentUser, vector<official> &officials, vector<a
             }
             clientMenu(currentUser, officials, admins, clients, acc);
         }
-        case 6:{
+        case 6: {
             main();
         }
     }

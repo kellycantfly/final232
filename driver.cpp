@@ -105,12 +105,14 @@ int main () {
             case 2: {
                 cout << "########" << endl;
                 cout << "You must go see a bank official to open an account." << endl;
-                cout << "[Enter] Return to Main Menu" << endl;
+                cout << "[Enter] Return to Exit"<< endl;
                 string buffer;
                 getline(cin,buffer);
+                exit(1);
 
             }
             case 3: { // exit condition
+                cout << "##############" << endl;
                 cout << " GOODBYE " << endl;
                 cout << "##############" << endl;
                 // saveAccounts();
@@ -201,6 +203,7 @@ void loadUsers(vector<official> &officials, vector<admin> &admins, vector<accoun
             string password = temp[2];
             string lastLogin = temp[3]; 
             string status = temp[4];
+            
             if(status.length() < 5) {
                 status = "Active";
             }
@@ -209,7 +212,6 @@ void loadUsers(vector<official> &officials, vector<admin> &admins, vector<accoun
             string phoneNumber = temp[7];
             string address = temp[8];
             vector<string> accounts;
-            
             string tempString;
             stringstream ss(temp[9]);
     
@@ -218,6 +220,7 @@ void loadUsers(vector<official> &officials, vector<admin> &admins, vector<accoun
             }
 
             accountHolder tempAccount(accountID, username, password, lastLogin, status, firstName, lastName, phoneNumber, address, accounts, log);
+            tempAccount.setStatus(status);
             clients.push_back(tempAccount);
         }
     }
@@ -231,11 +234,6 @@ bool validateLogin(string username, string password, int accType, vector<officia
     if(accType == 1) { // CUSTOMER
         for(int i = 0; i < clients.size(); i++) {
             if(clients[i].getUserName() == username && clients[i].getPassword() == password) {
-                time_t now = time(0);
-                char* date_time = ctime(&now);
-                string date(date_time);
-                clients[i].setLastLogin(date.substr(0,date.length()));
-                clients[i].saveClient();
                 clientMenu(clients[i], officials, admins, clients, acc);
             }
 

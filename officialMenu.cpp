@@ -35,6 +35,7 @@ void officialMenu(official currentUser, vector<official> &officials, vector<admi
                 for(int i = 0; i < clients.size(); i++) {
                     if(clients[i].getUserName() == username) {
                         string status = clients[i].getStatus();
+                        cout << clients[i].getStatus() << endl;
                         if(status.length() <= 7) {
                             cout << "##############" << endl;
                             cout << "User: " << username << endl;
@@ -114,7 +115,7 @@ void officialMenu(official currentUser, vector<official> &officials, vector<admi
                                 string cdAccounts;
                                 for(int i = 0; i < accounts.size(); i++) {
                                     string account = accounts[i];
-                                    if(account[0] == 'X') {
+                                    if(account[0] == 'F') {
                                         savingAccounts = savingAccounts + " " + account;
                                     }else if (account[0] == 'C') {
                                         checkingAccounts = checkingAccounts + " " + account;
