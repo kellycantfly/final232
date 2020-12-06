@@ -87,6 +87,35 @@ void clientMenu(accountHolder currentUser, vector<official> &officials, vector<a
             clientMenu(currentUser, officials, admins, clients, acc);
         }
         case 5: {
+            cout << "Which account would you like to see the balance of: " << endl;
+            string account;
+            getline(cin,account);
+            if(account[0] == 'C') {
+                for(int i = 0; i < acc.checkings.size(); i++) {
+                    if(account == acc.checkings[i].getAccountID() && currentUser.getUserID() == acc.checkings[i].getUserID()) {
+                        cout << "Current Balance: $"+ to_string(acc.checkings[i].getBalance()) << endl;
+                        clientMenu(currentUser, officials, admins, clients, acc);
+                    }
+                }
+            }else if(account[0] == 'F') {
+                for(int i = 0; i < acc.savings.size(); i++) {
+                    if(account == acc.savings[i].getAccountID() && currentUser.getUserID() == acc.savings[i].getUserID()) {
+                        cout << "Current Balance: $"+ to_string(acc.savings[i].getBalance());
+                        clientMenu(currentUser, officials, admins, clients, acc);
+                    }
+                }
+
+            }else if(account[0] == 'D') {
+                for(int i = 0; i < acc.cds.size(); i++) {
+                    if(account == acc.cds[i].getAccountID() && currentUser.getUserID() == acc.cds[i].getUserID()) {
+                        cout << "Current Balance: $"+ to_string(acc.cds[i].getBalance());
+                        clientMenu(currentUser, officials, admins, clients, acc);
+                    }
+                }
+            }
+            clientMenu(currentUser, officials, admins, clients, acc);
+        }
+        case 6:{
             main();
         }
     }
