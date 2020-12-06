@@ -12,18 +12,25 @@ namespace fs = filesystem;
 
 using namespace std;
 
-
-bool validateLogin(string username, string password, int accType, vector<official> &officials, vector<admin> &admins, vector<accountHolder> &clients);
-void retryLogin(int accType, vector<official> &officials, vector<admin> &admins, vector<accountHolder> &clients);
+bool validateLogin(string username, string password, int accType, vector<official> &officials, vector<admin> &admins, vector<accountHolder> &clients, financeAccounts &acc);
+void retryLogin(int accType, vector<official> &officials, vector<admin> &admins, vector<accountHolder> &clients, financeAccounts &acc);
 void loadUsers(vector<official> &officials, vector<admin> &admins, vector<accountHolder> &clients);
+void loadAccounts(vector<cdAccount> &cdAccounts, vector<checkingAccount> &checkingAccounts, vector<savingAccount> &savingAccounts);
 int main () {
-    
     vector<official> officials;
     vector<admin> admins;
     vector<accountHolder> clients;
+    vector<cdAccount> cdAccounts;
+    vector<checkingAccount> checkingAccounts;
+    vector<savingAccount> savingAccounts;
 
     for(;;) {
         loadUsers(officials, admins, clients);
+        loadAccounts(cdAccounts, checkingAccounts, savingAccounts);
+        financeAccounts acc;
+        acc.cds = cdAccounts;
+        acc.checkings = checkingAccounts;
+        acc.savings = savingAccounts;
         cout << "##############" << endl;
         cout << " BEAR BANK LOGIN " << endl;
         cout << " [1] LOGIN " << endl;
@@ -57,7 +64,7 @@ int main () {
                 cout << "Password: ";
                 string password;
                 getline(cin, password);
-                validateLogin(username, password, userSelection, officials, admins, clients);
+                validateLogin(username, password, userSelection, officials, admins, clients, acc);
                 }
                 if(userSelection == 2) {
                     cout << "##############" << endl;
@@ -82,10 +89,10 @@ int main () {
                     getline(cin, password);
                     if(userSelection == 1) {
                         userSelection = 2;
-                        validateLogin(username, password, userSelection, officials, admins, clients);
+                        validateLogin(username, password, userSelection, officials, admins, clients, acc);
                     }else if(userSelection == 2) {
                         userSelection = 3;
-                        validateLogin(username, password, userSelection, officials, admins, clients);
+                        validateLogin(username, password, userSelection, officials, admins, clients, acc);
                     }
                 } else if(userSelection == 3){
                     exit(1);
@@ -115,8 +122,6 @@ int main () {
 }
 // load in the users into the program
 void loadUsers(vector<official> &officials, vector<admin> &admins, vector<accountHolder> &clients) {
-    
- 
     string path = "Data/";
     vector<string> accountIDs; // USE A BST HERE!!!
     for(const auto & entry : fs::directory_iterator(path)) {
@@ -221,7 +226,7 @@ void loadUsers(vector<official> &officials, vector<admin> &admins, vector<accoun
 
 }
 
-bool validateLogin(string username, string password, int accType, vector<official> &officials, vector<admin> &admins, vector<accountHolder> &clients) {
+bool validateLogin(string username, string password, int accType, vector<official> &officials, vector<admin> &admins, vector<accountHolder> &clients, financeAccounts &acc) {
     loadUsers(officials,admins,clients);
     if(accType == 1) { // CUSTOMER
         for(int i = 0; i < clients.size(); i++) {
@@ -231,7 +236,7 @@ bool validateLogin(string username, string password, int accType, vector<officia
                 string date(date_time);
                 clients[i].setLastLogin(date.substr(0,date.length()));
                 clients[i].saveClient();
-                clientMenu(clients[i], officials, admins, clients);
+                clientMenu(clients[i], officials, admins, clients, acc);
             }
 
         }
@@ -274,14 +279,14 @@ bool validateLogin(string username, string password, int accType, vector<officia
         getline(cin, buffer);
         int userSelection = stoi(buffer);
         if(userSelection == 1) {
-            retryLogin(accType, officials, admins, clients);
+            retryLogin(accType, officials, admins, clients, acc);
         }else{ // error
             main();
         }
-     }while(validateLogin(username,password, accType, officials, admins, clients) == false);   
+     }while(validateLogin(username,password, accType, officials, admins, clients, acc) == false);   
 }
 
-void retryLogin(int accType, vector<official> &officials, vector<admin> &admins, vector<accountHolder> &clients) {
+void retryLogin(int accType, vector<official> &officials, vector<admin> &admins, vector<accountHolder> &clients, financeAccounts &acc) {
     cout << "##############" << endl;
     cout << " PLEASE ENTER YOUR CREDINTENALS " << endl;
     cout << "##############" << endl;
@@ -291,5 +296,89 @@ void retryLogin(int accType, vector<official> &officials, vector<admin> &admins,
     cout << "Password: ";
     string password;
     getline(cin, password);
-    validateLogin(username, password, accType, officials, admins, clients);
+    validateLogin(username, password, accType, officials, admins, clients, acc);
+}
+
+void loadAccounts(vector<cdAccount> &cdAccounts, vector<checkingAccount> &checkingAccounts, vector<savingAccount> &savingAccounts) {
+    string path = "Accounts/";
+    vector<string> accountIDs; // USE A BST HERE!!!
+    for(const auto & entry : fs::directory_iterator(path)) {
+        string temp = entry.path().string();
+        temp = temp.substr(9,8);
+        accountIDs.push_back(temp);
+    }
+    for(int i = 0; i < accountIDs.size(); i++) {
+        string accountID = accountIDs[i];
+        if(accountID[0] == 'C') {
+            ifstream inFile;
+            inFile.open("Accounts/"+accountID+".txt");
+            string text;
+            string log;
+            vector<string> temp;
+            while(getline(inFile, text)) {
+                if(text[0] != '@') {   
+                    temp.push_back(text); 
+                } else {
+                    log = text + log;
+                }
+            }
+            string accID = temp[0];
+            string userID = temp[1];
+            string status = temp[2];
+            double fees = stod(temp[3]);
+            double interestRate = stod(temp[4]);
+            double balance = stod(temp[5]);
+            checkingAccount tempAcc(accID, userID, status, fees, interestRate, balance, log);
+            checkingAccounts.push_back(tempAcc);
+        }else if (accountID[0] == 'F') {
+            string accountID = accountIDs[i];
+            ifstream inFile;
+            inFile.open("Accounts/"+accountID+".txt");
+            string text;
+            string log;
+            vector<string> temp;
+            while(getline(inFile, text)) {
+                if(text[0] != '@') {   
+                    temp.push_back(text); 
+                } else {
+                    log = text + log;
+                }
+            }
+            string accID = temp[0];
+            string userID = temp[1];
+            string status = temp[2];
+            double fees = stod(temp[3]);
+            double interestRate = stod(temp[4]);
+            double balance = stod(temp[5]);
+            savingAccount tempAcc(accID, userID, status, fees, interestRate, balance, log);
+            savingAccounts.push_back(tempAcc);
+
+        }else if (accountID[0] == 'D') {
+            string accountID = accountIDs[i];
+            ifstream inFile;
+            inFile.open("Accounts/"+accountID+".txt");
+            string text;
+            string log;
+            vector<string> temp;
+            while(getline(inFile, text)) {
+                if(text[0] != '@') {   
+                    temp.push_back(text); 
+                } else {
+                    log = text + log;
+                }
+            }
+            string accID = temp[0];
+            string userID = temp[1];
+            string status = temp[2];
+            double fees = stod(temp[3]);
+            double interestRate = stod(temp[4]);
+            double balance = stod(temp[5]);
+            string date = temp[6];
+            string term = temp[7];
+            double penalty = stod(temp[8]);
+            cdAccount tempAcc(accID, userID, status, fees, interestRate, balance, date, term, penalty, log);
+            cdAccounts.push_back(tempAcc);
+            
+        }
+    }
 }
