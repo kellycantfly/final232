@@ -78,10 +78,13 @@ class accountHolder : public User {
         }
         void deleteAccount() {
                 string filePath = "Data/" + userID + ".txt";
+                for(int i = 0; i < accounts.size(); i++) {
+                    string filePath2 = "Accounts/" + accounts[i] + ".txt";
+                }
                 if(remove(filePath.c_str()) != 0) {
                     cout << "The account has been deleted." << endl;
                 }
-              // rememmber to delete the checking accounts and such here too  
+              
         }
          void disableAccount(string officialID) {
             status = "Inactive " + officialID;
