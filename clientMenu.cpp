@@ -14,7 +14,7 @@ void clientMenu(accountHolder currentUser, vector<official> &officials, vector<a
     cout << "##############" << endl;
     cout << "CLIENT MENU " << endl;
     cout << "Welcome back, " + currentUser.getFirstName() + " " + currentUser.getLastName() << endl;
-    cout << "Last logged in at: " << currentUser.getLastLogin();
+    cout << "Last logged in at: " << currentUser.getLastLogin() << endl;
     time_t now = time(0);
     char* date_time = ctime(&now);
     string date(date_time);
