@@ -1,13 +1,35 @@
-#ifndef SAVINGACCOUNT_H
-#define SAVINGACCOUNT_H
-#include "checkingAccount.h"
+#ifndef CHECKINGACCOUNT_H
+#define CHECKINGACCOUNT_H
 #include <iostream>
 #include <string>
+#include <time.h>
 using namespace std;
 
-class savingAccount : public checkingAccount {
-    public:
-        savingAccount(string acc, string userHolderID, string stat, double charge, double IR, double bal, string activity) {
+class checkingAccount {
+    protected:
+        string accID;
+        string userID;
+        string status;
+        double balance;
+        double fee;
+        double interestRate;
+        string log;
+    public: 
+        checkingAccount() {
+            srand(time(0));
+            string accID;
+            int random;
+            for(int i = 0; i < 7; i++) {
+                random = 1 + (rand() % 9);
+                accID += to_string(random);
+            }
+            accID = "C" + userID;
+            status = "Active";
+            balance = 0;
+            fee = 0;
+            interestRate = 0;
+        }
+        checkingAccount(string acc, string userHolderID, string stat, double charge, double IR, double bal, string activity) {
             accID = acc;
             userID = userHolderID;
             status = stat;
@@ -17,18 +39,25 @@ class savingAccount : public checkingAccount {
             log = activity;
 
         }
-        virtual void deposit(int amt) {
+        string getAccountID() {
+            return accID;
+        }
+        string getUserID() {
+            return userID;
+        }
+        void deposit(int amt) {
             if(amt > 0) {
                 balance+=amt;
+            }else {
+                cout << "Invalid Amount." << endl;
             }
         }
-        virtual void withdraw(int amt) {
+        void withdraw(int amt) {
             if(amt < balance && amt > 0) {
                 balance-=amt;
+            }else {
+                cout << "Invalid Amount." << endl;
             }
-        }
-        virtual void setInterestRate(double IR) {
-            interestRate = IR;
         }
 
         double getBalance() {

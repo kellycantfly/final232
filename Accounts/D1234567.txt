@@ -6,4 +6,4 @@ Active
 10000
 dateOpen
 30
-10
+10.0

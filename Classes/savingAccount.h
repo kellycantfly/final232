@@ -24,7 +24,7 @@ class savingAccount : public checkingAccount {
         }
         virtual void withdraw(int amt) {
             if(amt < balance && amt > 0) {
-                balance-+amt;
+                balance-=amt;
             }
         }
         virtual void setInterestRate(double IR) {
