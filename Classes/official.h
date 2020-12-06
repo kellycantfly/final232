@@ -38,10 +38,10 @@ class official : public User {
         }
         
         void disableAccount(string adminID) {
-            status = "Inactive " + adminID;
+            status = "Inactive by " + adminID + "\n";
         }
         void enableAccount() {
-            status = "Active";
+            status = "Active\n"; 
         }
        
 };
