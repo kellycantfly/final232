@@ -80,6 +80,7 @@ class accountHolder : public User {
                 string filePath = "Data/" + userID + ".txt";
                 for(int i = 0; i < accounts.size(); i++) {
                     string filePath2 = "Accounts/" + accounts[i] + ".txt";
+                    remove(filePath2.c_str());
                 }
                 if(remove(filePath.c_str()) != 0) {
                     cout << "The account has been deleted." << endl;
