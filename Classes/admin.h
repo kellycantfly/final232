@@ -20,7 +20,7 @@ class admin : public User {
                 if(remove(filePath.c_str()) != 0) {
                     cout << "The account has been deleted." << endl;
                 }
-              // rememmber to delete the checking accounts and such here too  
+              
         }
         void saveAdmin() {
             ofstream outFile;
