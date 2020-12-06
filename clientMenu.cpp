@@ -78,7 +78,43 @@ void clientMenu(accountHolder currentUser, vector<official> &officials, vector<a
             clientMenu(currentUser, officials, admins, clients, acc);
         }
         case 2: {
+            cout << "Which account would you like to withdraw funds from: " << endl;
+            string account;
+            getline(cin,account);
+            if(account[0] == 'C') {
+                for(int i = 0; i < acc.checkings.size(); i++) {
+                    if(account == acc.checkings[i].getAccountID() && currentUser.getUserID() == acc.checkings[i].getUserID()) {
+                        cout << "Current Balance: $"+ to_string(acc.checkings[i].getBalance()) << endl;
+                        cout << "How much would you like to withdraw?" << endl;
+                        cout << "$";
+                        string amount;
+                        getline(cin, amount);
+                        double amt = stod(amount);
+                        acc.checkings[i].withdraw(amt);
+                        cout << endl;
+                        cout << "Your balance is: $" + to_string(acc.checkings[i].getBalance());
+                        clientMenu(currentUser, officials, admins, clients, acc);
+                    }
+                }
+            }else if(account[0] == 'F') {
+                for(int i = 0; i < acc.savings.size(); i++) {
+                    if(account == acc.savings[i].getAccountID() && currentUser.getUserID() == acc.savings[i].getUserID()) {
+                        cout << "Current Balance: $"+ to_string(acc.savings[i].getBalance());
+                        cout << "How much would you like to withdraw?" << endl;
+                        cout << "$";
+                        string amount;
+                        getline(cin, amount);
+                        double amt = stod(amount);
+                        acc.savings[i].withdraw(amt);
+                        cout << "Your new balance is: $" + to_string(acc.savings[i].getBalance());
+                        clientMenu(currentUser, officials, admins, clients, acc);
+                    }
+                }
 
+            }else if(account[0] == 'D') {
+                // include a penalty for withdrawing if the account has yet to mature....
+            }
+            clientMenu(currentUser, officials, admins, clients, acc);
         }
         case 3: {
             cout << "Coming Soon!" << endl;
