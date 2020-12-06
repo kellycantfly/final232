@@ -105,10 +105,10 @@ int main () {
             case 2: {
                 cout << "########" << endl;
                 cout << "You must go see a bank official to open an account." << endl;
-                cout << "[Enter] Return to Exit"<< endl;
+                cout << "[Enter] Return to Main Menu"<< endl;
                 string buffer;
                 getline(cin,buffer);
-                exit(1);
+                main();
 
             }
             case 3: { // exit condition
