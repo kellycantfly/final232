@@ -106,7 +106,7 @@ int main () {
                 cout << "########" << endl;
                 cout << "You must go see a bank official to open an account." << endl;
                 cout << "[Enter] Return to Main Menu"<< endl;
-                string buffer;
+                string buffer = "";
                 getline(cin,buffer);
                 main();
 
@@ -281,7 +281,8 @@ bool validateLogin(string username, string password, int accType, vector<officia
         }else{ // error
             main();
         }
-     }while(validateLogin(username,password, accType, officials, admins, clients, acc) == false);   
+     }while(validateLogin(username,password, accType, officials, admins, clients, acc) == false);
+     return true; 
 }
 
 void retryLogin(int accType, vector<official> &officials, vector<admin> &admins, vector<accountHolder> &clients, financeAccounts &acc) {
