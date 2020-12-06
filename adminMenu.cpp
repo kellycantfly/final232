@@ -394,6 +394,7 @@ accountHolder lookUpClient(vector<accountHolder> &clients) {
          cout << "##############" << endl;
         return clients[0];
     }
+    return clients[0];
 }
 
 official lookUpOfficial(vector<official> &officials) {
