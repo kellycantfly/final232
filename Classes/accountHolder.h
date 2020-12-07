@@ -107,7 +107,9 @@ class accountHolder : public User {
             }
             return 0;
         }
-       
+       void setAccounts(vector<string> acc){
+         accounts = acc;
+        }
 
 
 };
