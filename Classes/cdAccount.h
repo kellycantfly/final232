@@ -24,7 +24,20 @@ class cdAccount : public checkingAccount {
             penalty = pen;
             term = amountOfTime;
         }
-       
+        void saveAccount() {
+            ofstream outFile;
+            outFile.open("Accounts/"+accID + ".txt");
+            outFile << accID << endl;
+            outFile << userID << endl;
+            outFile << status << endl;
+            outFile << interestRate << endl;
+            outFile << fee << endl;
+            outFile << balance << endl;
+            outFile << log << endl;
+            outFile << dateOpen << endl;
+            outFile << penalty << endl;
+            outFile << term << endl;
+        }
 
 };
 

@@ -63,6 +63,16 @@ class checkingAccount {
         double getBalance() {
             return balance;
         }
+        virtual void saveAccount() {
+            ofstream outFile;
+            outFile.open("Accounts/"+accID + ".txt");
+            outFile << accID << endl;
+            outFile << userID << endl;
+            outFile << status << endl;
+            outFile << interestRate << endl;
+            outFile << fee << endl;
+            outFile << balance << endl;
+        }
        
 
 };
