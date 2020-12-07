@@ -2,6 +2,7 @@
 #define accountHolder_H
 #include "user.h"
 #include <vector>
+#include <string>
 using namespace std;
 class accountHolder : public User {
     private:
@@ -43,16 +44,16 @@ class accountHolder : public User {
             ofstream outFile;
             outFile.open("Data/"+userID + ".txt");
             outFile << userID << endl;
-            outFile << username << endl;
-            outFile << password << endl;
-            outFile << lastLogin;
-            outFile << status << endl;
-            outFile << firstName << endl;
-            outFile << lastName << endl;
-            outFile << phoneNumber << endl;
-            outFile << address << endl;
+            outFile << encrypt(username) << endl;
+            outFile << encrypt(password) << endl;
+            outFile << encrypt(lastLogin) << endl;
+            outFile << encrypt(status) << endl;
+            outFile << encrypt(firstName) << endl;
+            outFile << encrypt(lastName) << endl;
+            outFile << encrypt(phoneNumber) << endl;
+            outFile << encrypt(address) << endl;
             for(int i = 0; i < accounts.size(); i++) {
-                outFile << accounts[i] + " ";
+                outFile << encrypt(accounts[i]) + " ";
             }
             if (accounts.empty() == true) {
                 outFile << "N/A";
@@ -75,6 +76,9 @@ class accountHolder : public User {
         }
         vector<string> getAccounts() {
            return accounts;
+        }
+        void setAccounts(vector<string> acc){
+            accounts = acc;
         }
         void deleteAccount() {
                 string filePath = "Data/" + userID + ".txt";
@@ -107,9 +111,7 @@ class accountHolder : public User {
             }
             return 0;
         }
-       void setAccounts(vector<string> acc){
-         accounts = acc;
-        }
+       
 
 
 };
