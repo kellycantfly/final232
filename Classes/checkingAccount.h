@@ -67,13 +67,43 @@ class checkingAccount {
             ofstream outFile;
             outFile.open("Accounts/"+accID + ".txt");
             outFile << accID << endl;
-            outFile << userID << endl;
-            outFile << status << endl;
-            outFile << interestRate << endl;
-            outFile << fee << endl;
-            outFile << balance << endl;
+            outFile << encrypt(userID) << endl;
+            outFile << encrypt(status) << endl;
+            outFile << encrypt(to_string(interestRate)) << endl;
+            outFile << encrypt(to_string(fee)) << endl;
+            outFile << encrypt(to_string(balance)) << endl;
         }
-       
+
+        string encrypt(string input)
+{
+    string newString = "";
+    int counter = 0;
+    int modifier = 1;
+    while (input != "")
+    {
+        if (counter == 6)
+        {
+            counter = 0;
+        }
+        if (counter <=2)
+        {
+            modifier +=1;
+        }
+        if (counter <= 5 && counter >2)
+        {
+            modifier -=1;
+        }
+        counter +=1;
+        char tempString;
+        
+        tempString = input[0];
+        tempString += modifier;
+
+        newString = newString + tempString;
+        input = input.substr(1,input.length());
+    }
+    return newString;
+}
 
 };
 
