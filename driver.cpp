@@ -16,6 +16,7 @@ bool validateLogin(string username, string password, int accType, vector<officia
 void retryLogin(int accType, vector<official> &officials, vector<admin> &admins, vector<accountHolder> &clients, financeAccounts &acc);
 void loadUsers(vector<official> &officials, vector<admin> &admins, vector<accountHolder> &clients);
 void loadAccounts(vector<cdAccount> &cdAccounts, vector<checkingAccount> &checkingAccounts, vector<savingAccount> &savingAccounts);
+string decrypt(string input);
 int main () {
     vector<official> officials;
     vector<admin> admins;
@@ -154,10 +155,10 @@ void loadUsers(vector<official> &officials, vector<admin> &admins, vector<accoun
                     log = text + log;
                 }
             }
-            string username = temp[1];
-            string password = temp[2];
-            string lastLogin = temp [3]; 
-            string status = temp [4];
+            string username = decrypt(temp[1]);
+            string password = decrypt(temp[2]);
+            string lastLogin = decrypt(temp[3]); 
+            string status = decrypt(temp[4]);
             if(status.length() < 5) {
                 status = "Active";
             }
@@ -177,10 +178,10 @@ void loadUsers(vector<official> &officials, vector<admin> &admins, vector<accoun
                     log = text + log;
                 }
             }
-            string username = temp[1];
-            string password = temp[2];
-            string lastLogin = temp[3]; 
-            string status = temp[4];
+            string username = decrypt(temp[1]);
+            string password = decrypt(temp[2]);
+            string lastLogin = decrypt(temp[3]); 
+            string status = decrypt(temp[4]);
 
             if(status.length() < 5) {
                 status = "Active";
@@ -204,24 +205,24 @@ void loadUsers(vector<official> &officials, vector<admin> &admins, vector<accoun
                 }
             }
 
-            string username = temp[1];
-            string password = temp[2];
-            string lastLogin = temp[3]; 
-            string status = temp[4];
+            string username = decrypt(temp[1]);
+            string password = decrypt(temp[2]);
+            string lastLogin = decrypt(temp[3]); 
+            string status = decrypt(temp[4]);
             
             if(status.length() < 5) {
                 status = "Active";
             }
-            string firstName = temp[5];
-            string lastName = temp[6];
-            string phoneNumber = temp[7];
-            string address = temp[8];
+            string firstName = decrypt(temp[5]);
+            string lastName = decrypt(temp[6]);
+            string phoneNumber = decrypt(temp[7]);
+            string address = decrypt(temp[8]);
             vector<string> accounts;
             string tempString;
             stringstream ss(temp[9]);
     
             while(getline(ss, tempString, ' ')) {
-                accounts.push_back(tempString);
+                accounts.push_back(decrypt(tempString));
             }
 
             accountHolder tempAccount(accountID, username, password, lastLogin, status, firstName, lastName, phoneNumber, address, accounts, log);
@@ -241,7 +242,6 @@ bool validateLogin(string username, string password, int accType, vector<officia
             if(clients[i].getUserName() == username && clients[i].getPassword() == password) {
                 clientMenu(clients[i], officials, admins, clients, acc);
             }
-
         }
     }
     if(accType == 2) { // OFFICIAL
@@ -327,11 +327,11 @@ void loadAccounts(vector<cdAccount> &cdAccounts, vector<checkingAccount> &checki
                 }
             }
             string accID = temp[0];
-            string userID = temp[1];
-            string status = temp[2];
-            double fees = stod(temp[3]);
-            double interestRate = stod(temp[4]);
-            double balance = stod(temp[5]);
+            string userID = decrypt(temp[1]);
+            string status = decrypt(temp[2]);
+            double fees = stod(decrypt(temp[3]));
+            double interestRate = stod(decrypt(temp[4]));
+            double balance = stod(decrypt(temp[5]));
             checkingAccount tempAcc(accID, userID, status, fees, interestRate, balance, log);
             checkingAccounts.push_back(tempAcc);
         }else if (accountID[0] == 'F') {
@@ -349,11 +349,11 @@ void loadAccounts(vector<cdAccount> &cdAccounts, vector<checkingAccount> &checki
                 }
             }
             string accID = temp[0];
-            string userID = temp[1];
-            string status = temp[2];
-            double fees = stod(temp[3]);
-            double interestRate = stod(temp[4]);
-            double balance = stod(temp[5]);
+            string userID = decrypt(temp[1]);
+            string status = decrypt(temp[2]);
+            double fees = stod(decrypt(temp[3]));
+            double interestRate = stod(decrypt(temp[4]));
+            double balance = stod(decrypt(temp[5]));
             savingAccount tempAcc(accID, userID, status, fees, interestRate, balance, log);
             savingAccounts.push_back(tempAcc);
 
@@ -385,4 +385,34 @@ void loadAccounts(vector<cdAccount> &cdAccounts, vector<checkingAccount> &checki
             
         }
     }
+}
+string decrypt(string input)
+{
+    string newString = "";
+    int counter = 0;
+    int modifier = 1;
+    while (input != "")
+    {
+        if (counter == 6)
+        {
+            counter = 0;
+        }
+        if (counter <=2)
+        {
+            modifier +=1;
+        }
+        if (counter <= 5 && counter >2)
+        {
+            modifier -=1;
+        }
+        counter +=1;
+        char tempString;
+        
+        tempString = input[0];
+        tempString -= modifier;
+
+        newString = newString + tempString;
+        input = input.substr(1,input.length());
+    }
+    return newString;
 }
