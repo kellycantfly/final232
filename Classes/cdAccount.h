@@ -28,15 +28,15 @@ class cdAccount : public checkingAccount {
             ofstream outFile;
             outFile.open("Accounts/"+accID + ".txt");
             outFile << accID << endl;
-            outFile << userID << endl;
-            outFile << status << endl;
-            outFile << interestRate << endl;
-            outFile << fee << endl;
-            outFile << balance << endl;
-            outFile << log << endl;
-            outFile << dateOpen << endl;
-            outFile << penalty << endl;
-            outFile << term << endl;
+            outFile << encrypt(userID) << endl;
+            outFile << encrypt(status) << endl;
+            outFile << encrypt(to_string(interestRate)) << endl;
+            outFile << encrypt(to_string(fee)) << endl;
+            outFile << encrypt(to_string(balance)) << endl;
+            outFile << encrypt(log) << endl;
+            outFile << encrypt(dateOpen) << endl;
+            outFile << encrypt(to_string(penalty)) << endl;
+            outFile << encrypt(term) << endl;
         }
 
 };
