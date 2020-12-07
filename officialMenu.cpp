@@ -28,7 +28,7 @@ void officialMenu(official currentUser, vector<official> &officials, vector<admi
            officialMenu(currentUser, officials, admins, clients);
         }
         case 2: {
-             cout << "Enter the Account Holder's username: " << endl;
+                cout << "Enter the Account Holder's username: " << endl;
                 string buffer = "";
                 getline(cin, buffer);
                 string username = buffer;
@@ -239,19 +239,53 @@ void officialMenu(official currentUser, vector<official> &officials, vector<admi
                          officialMenu(currentUser, officials, admins, clients);
 
                     }
+                    default: {
+                        cout << "Incorrect Selection... " << endl;
+                        cout << "[Enter] to Return" << endl;
+                        string buffer;
+                        getline(cin, buffer);
+                        officialMenu(currentUser, officials, admins, clients);
+                    }
                 }
                    
         } 
         case 4: {
+            cout << "Enter the Account Holder's username: " << endl;
+            string buffer = "";
+            getline(cin, buffer);
+            string username = buffer;
+            for(int i = 0; i < clients.size(); i++) {
+                if(clients[i].getUserName() == username) {
+                    if(clients[i].listAccounts() == 1) {
+                        cout << "--------" << endl;
+                        cout << "Which account would you like to deposit or withdraw from?: " << endl;
+                        string accountID;
+                        getline(cin, buffer);
+                        
+                    }else {
+                        cout << "No Finance Accounts to Interact with." << endl;
+                        cout << "[Enter] to Return" << endl;
+                        string buffer;
+                        getline(cin, buffer);
+                    }
+                }
 
+        }
         }
         case 5: {
             main();
         }
-
+        default: {
+                cout << "Incorrect Selection... " << endl;
+                cout << "[Enter] to Return" << endl;
+                string buffer;
+                getline(cin, buffer);
+                officialMenu(currentUser, officials, admins, clients);
+         }
     }
 
 }
+
 
 accountHolder createAccount() {
     srand(time(0));

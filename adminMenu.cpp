@@ -8,6 +8,8 @@
 #include <time.h>
 using namespace std;
 
+// TODO; MAKE SURE USERNAMES DON"T COLLIDE
+
 official createOfficial();
 accountHolder lookUpClient(vector<accountHolder> &clients);
 admin lookUpAdmin(vector<admin> &admin);
@@ -205,6 +207,13 @@ void adminMenu(admin currentUser, vector<official> &officials, vector<admin> &ad
                     case 4: {
                         adminMenu(currentUser, officials, admins, clients);
                     }
+                    default: {
+                        cout << "Incorrect Selection.. " << endl;
+                        cout << "[Enter] to Return" << endl;
+                        string buffer;
+                        getline(cin, buffer);
+                        adminMenu(currentUser, officials, admins, clients);
+                    }
                 }
                 
             }
@@ -272,7 +281,10 @@ void adminMenu(admin currentUser, vector<official> &officials, vector<admin> &ad
                 main();
             }
             default: {
-                cout << "Invalid Input..." << endl;
+                cout << "Incorrect Selection.. " << endl;
+                cout << "[Enter] to Return" << endl;
+                string buffer;
+                getline(cin, buffer);
                 adminMenu(currentUser, officials, admins, clients);
             }
         }

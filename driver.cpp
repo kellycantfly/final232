@@ -110,12 +110,18 @@ int main () {
                 main();
 
             }
-            case 3: { // exit condition
+            case 3: { 
                 cout << "##############" << endl;
                 cout << " GOODBYE " << endl;
                 cout << "##############" << endl;
-                // saveAccounts();
                 exit(1);
+            }
+            default: {
+                cout << "Incorrect Selection... " << endl;
+                cout << "[Enter] to Return" << endl;
+                string buffer;
+                getline(cin, buffer);
+                main();
             }
         }
         
