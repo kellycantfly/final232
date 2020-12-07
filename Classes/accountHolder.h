@@ -96,6 +96,17 @@ class accountHolder : public User {
         void setStatus(string stat) {
             status = stat;
         }
+        int listAccounts() {
+            if(accounts.size() > 0) {
+            for(int i = 0; i < accounts.size(); i++) {
+                cout << accounts[i] << endl;
+                return 1;
+            }
+            }else {
+                return 0;
+            }
+            return 0;
+        }
        
 
 

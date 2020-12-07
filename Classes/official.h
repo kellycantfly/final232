@@ -32,16 +32,16 @@ class official : public User {
             outFile << userID << endl;
             outFile << username << endl;
             outFile << password << endl;
-            outFile << lastLogin;
+            outFile << lastLogin << endl;
             outFile << status << endl;
             outFile << log << endl;
         }
         
         void disableAccount(string adminID) {
-            status = "Inactive by " + adminID + "\n";
+            status = "\nInactive by " + adminID;
         }
         void enableAccount() {
-            status = "Active\n"; 
+            status = "\nActive"; 
         }
        
 };
