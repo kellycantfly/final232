@@ -56,6 +56,36 @@ class User {
                 }
                 
         }
+        string encrypt(string input)
+{
+    string newString = "";
+    int counter = 0;
+    int modifier = 1;
+    while (input != "")
+    {
+        if (counter == 6)
+        {
+            counter = 0;
+        }
+        if (counter <=2)
+        {
+            modifier +=1;
+        }
+        if (counter <= 5 && counter >2)
+        {
+            modifier -=1;
+        }
+        counter +=1;
+        char tempString;
+        
+        tempString = input[0];
+        tempString += modifier;
+
+        newString = newString + tempString;
+        input = input.substr(1,input.length());
+    }
+    return newString;
+}
         
        
 
