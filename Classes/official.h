@@ -30,10 +30,10 @@ class official : public User {
             ofstream outFile;
             outFile.open("Data/"+userID + ".txt");
             outFile << userID << endl;
-            outFile << username << endl;
-            outFile << password << endl;
-            outFile << lastLogin << endl;
-            outFile << status << endl;
+            outFile << encrypt(username) << endl;
+            outFile << encrypt(password) << endl;
+            outFile << encrypt(lastLogin) << endl;
+            outFile << encrypt(status) << endl;
             outFile << log << endl;
         }
         
