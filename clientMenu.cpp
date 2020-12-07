@@ -54,6 +54,7 @@ void clientMenu(accountHolder currentUser, vector<official> &officials, vector<a
                         getline(cin, amount);
                         double amt = stod(amount);
                         acc.checkings[i].deposit(amt);
+                        acc.checkings[i].saveAccount();
                         cout << endl;
                         cout << "Your new balance is: $" <<setprecision(2)<<fixed<<acc.checkings[i].getBalance()<<endl;
                         clientMenu(currentUser, officials, admins, clients, acc);
@@ -69,6 +70,7 @@ void clientMenu(accountHolder currentUser, vector<official> &officials, vector<a
                         getline(cin, amount);
                         double amt = stod(amount);
                         acc.savings[i].deposit(amt);
+                        acc.savings[i].saveAccount();
                         cout << "Your new balance is: $"<<setprecision(2)<<fixed<< acc.savings[i].getBalance()<<endl;
                         clientMenu(currentUser, officials, admins, clients, acc);
                     }
@@ -93,6 +95,7 @@ void clientMenu(accountHolder currentUser, vector<official> &officials, vector<a
                         getline(cin, amount);
                         double amt = stod(amount);
                         acc.checkings[i].withdraw(amt);
+                        acc.checkings[i].saveAccount();
                         cout << endl;
                         cout << "Your balance is: $" <<setprecision(2)<<fixed<<acc.checkings[i].getBalance()<<endl;
                         clientMenu(currentUser, officials, admins, clients, acc);
@@ -108,6 +111,7 @@ void clientMenu(accountHolder currentUser, vector<official> &officials, vector<a
                         getline(cin, amount);
                         double amt = stod(amount);
                         acc.savings[i].withdraw(amt);
+                        acc.savings[i].saveAccount();
                         cout << "Your new balance is: $" <<setprecision(2)<<fixed<<acc.savings[i].getBalance()<<endl;
                         clientMenu(currentUser, officials, admins, clients, acc);
                     }
@@ -206,6 +210,7 @@ void clientMenu(accountHolder currentUser, vector<official> &officials, vector<a
                     getline(cin,accid);
                     accid = "C" + accid;
                     checkingAccount tempAcc(accid,userid,status,stod(fee),stod(ir),stod(bal),"none");
+                    tempAcc.saveAccount();
                     acc.checkings.emplace_back(tempAcc);
                     accounts.emplace_back(accid);
                     currentUser.setAccounts(accounts);
@@ -226,6 +231,7 @@ void clientMenu(accountHolder currentUser, vector<official> &officials, vector<a
                     getline(cin,accid);
                     accid = "D" + accid;
                     savingAccount tempAcc(accid,userid,status,stod(fee),stod(ir),stod(bal),"none");
+                    tempAcc.saveAccount();
                     acc.savings.emplace_back(tempAcc);
                     accounts.emplace_back(accid);
                     currentUser.setAccounts(accounts);
@@ -253,6 +259,7 @@ void clientMenu(accountHolder currentUser, vector<official> &officials, vector<a
                     tm* timePtr = localtime(&currentTime);
                     date = to_string((timePtr->tm_mday))+"/"+ to_string((timePtr->tm_mon)+1) +"/"+ to_string((timePtr->tm_year)+1900);
                     cdAccount tempAcc(accid,userid,status,stod(fee),stod(ir),stod(bal),date,term,stod(penalty),"none");
+                    tempAcc.saveAccount();
                     acc.cds.emplace_back(tempAcc);
                     accounts.emplace_back(accid);
                     currentUser.setAccounts(accounts);
